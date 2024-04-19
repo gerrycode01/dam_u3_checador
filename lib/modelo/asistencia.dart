@@ -13,7 +13,7 @@ class Asistencia {
 
   Map<String, dynamic> toJSON(){
     return {
-      'idasistencia':idasistencia,
+      //'idasistencia':idasistencia,
       'nhorario':nhorario,
       'fecha':fecha,
       'asistencia':asistencia
