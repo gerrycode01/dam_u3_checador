@@ -45,7 +45,7 @@ class Conexion {
     ''');
     await db.execute('''
       CREATE TABLE ASISTENCIA(
-        IDASISTENCIA INTEGER PRIMARY KEY,
+        IDASISTENCIA INTEGER PRIMARY KEY AUTOINCREMENT,
         NHORARIO INTEGER,
         FECHA TEXT,
         ASISTENCIA BOOLEAN,
