@@ -10,4 +10,13 @@ class Asistencia {
     required this.fecha,
     required this.asistencia
   });
+
+  Map<String, dynamic> toJSON(){
+    return {
+      'idasistencia':idasistencia,
+      'nhorario':nhorario,
+      'fecha':fecha,
+      'asistencia':asistencia
+    };
+  }
 }

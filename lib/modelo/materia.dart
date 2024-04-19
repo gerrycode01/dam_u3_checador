@@ -1,6 +1,10 @@
 class Materia {
-  String nmat;
+  String nmat; //LLAVE PRIMARIA
   String descripcion;
 
   Materia({required this.nmat, required this.descripcion});
+
+  Map<String, dynamic> toJSON() {
+    return {'nmat': nmat, 'descripcion': descripcion};
+  }
 }

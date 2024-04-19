@@ -1,5 +1,5 @@
 class Horario {
-  int nhorario;
+  int nhorario; //llave primaria AUTOINCREMENTABLE
   String nprofesor;
   String nmat;
   String hora;
@@ -13,4 +13,15 @@ class Horario {
       required this.hora,
       required this.edificio,
       required this.salon});
+
+  Map<String, dynamic> toJSON() {
+    return {
+      //'nhorario':nhorario,
+      'nprofesor': nprofesor,
+      'nmat': nmat,
+      'hora': hora,
+      'edificio': edificio,
+      'salon': salon
+    };
+  }
 }
