@@ -86,10 +86,12 @@ class DBProfesor {
   static Future<List<Profesor>> query2(String fecha) async {
     final db = await Conexion.database;
     String sql = '''
-     SELECT * FROM PROFESOR 
-     INNER JOIN HORARIO ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR
-     INNER JOIN ASISTENCIA ON ASISTENCIA.NHORARIO = HORARIO.NHORARIO
-     WHERE ASISTENCIA.FECHA = ?
+      SELECT PROFESOR.NPROFESOR, PROFESOR.NOMBRE, PROFESOR.CARRERA
+      FROM PROFESOR 
+      INNER JOIN HORARIO ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR
+      INNER JOIN ASISTENCIA ON ASISTENCIA.NHORARIO = HORARIO.NHORARIO
+      WHERE ASISTENCIA.FECHA = ?
+      GROUP BY PROFESOR.NPROFESOR
     ''';
     List<Map<String, dynamic>> resultado = await db.rawQuery(sql, [fecha]);
     return List.generate(
