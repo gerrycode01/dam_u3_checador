@@ -6,6 +6,11 @@ import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 class DBProfesor {
   static Future<int> insertar(Profesor profesor) async {
     final db = await Conexion.database;
+
+    Profesor profe = await mostrarUno(profesor.nprofesor);
+    if(profe != null ){
+      return 0;
+    }
     return db.insert('PROFESOR', profesor.toJSON());
   }
 
