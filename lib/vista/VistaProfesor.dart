@@ -1,3 +1,5 @@
+import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
+import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:flutter/material.dart';
 
 class Profesor extends StatefulWidget {
@@ -8,6 +10,8 @@ class Profesor extends StatefulWidget {
 }
 
 class _ProfesorState extends State<Profesor> {
+  List<Profesor> ListaProfesor = [];
+
   final _numeroProfesor = TextEditingController();
   final _nombreController = TextEditingController();
   final _carreraController = TextEditingController();
@@ -18,6 +22,13 @@ class _ProfesorState extends State<Profesor> {
     _nombreController.dispose();
     _carreraController.dispose();
     super.dispose();
+  }
+
+  void cargarLista() async {
+    List<Profesor> l = (await DBProfesor.mostrar()).cast<Profesor>();
+    setState(() {
+      ListaProfesor = l;
+    });
   }
 
   void _showAddProfesorDialog() {

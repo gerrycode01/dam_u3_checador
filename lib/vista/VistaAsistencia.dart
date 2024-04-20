@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:dam_u3_practica1_checador/modelo/asistencia.dart';
+import 'package:dam_u3_practica1_checador/controlador/DBAsistencia.dart';
 
 class Asistencia extends StatefulWidget {
   const Asistencia({super.key});
@@ -8,10 +10,11 @@ class Asistencia extends StatefulWidget {
 }
 
 class _AsistenciaState extends State<Asistencia> {
-  // Controladores de texto para los campos del formulario
+  List<Asistencia> ListaAsistencia = [];
   final _fechaController = TextEditingController();
   final _profesorController = TextEditingController();
-  final _asistenciaController = TextEditingController(); // Este podría ser un Dropdown o Switch
+  final _asistenciaController = TextEditingController();
+  int asistenciaseleccionada = 0;// Este podría ser un Dropdown o Switch
 
   @override
   void dispose() {
@@ -55,11 +58,18 @@ class _AsistenciaState extends State<Asistencia> {
                     hintText: 'Nombre del Profesor',
                   ),
                 ),
-                TextField(
-                  controller: _asistenciaController,
-                  decoration: const InputDecoration(
-                    hintText: 'Asistencia (Sí/No)',
-                  ),
+                DropdownButtonFormField(
+                    items: ListaAsistencia.map((e) {
+                      return DropdownMenuItem(
+                        child: Text(e),
+                        value: e.artistaid,
+                      );
+                    }).toList(),
+                    onChanged: (valor){
+                      setState(() {
+                        asistenciaseleccionada = valor!;
+                      });
+                    }
                 ),
               ],
             ),

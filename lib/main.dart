@@ -67,13 +67,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             ListTile(
-              leading: const Icon(Icons.schedule),
-              title: const Text('Horarios'),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const Horarios()));
-              },
-            ),
-            ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Profesores'),
               onTap: () {
@@ -85,6 +78,13 @@ class _MyHomePageState extends State<MyHomePage> {
               title: const Text('Materias'),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const Materia()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.schedule),
+              title: const Text('Horarios'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Horarios()));
               },
             ),
             ListTile(
