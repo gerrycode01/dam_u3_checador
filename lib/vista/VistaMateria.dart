@@ -88,46 +88,44 @@ class _VistaMateriaState extends State<VistaMateria> {
       },
     );
   }
-  void _editarmateria(int index){
-    showDialog(
+  void _editarMateria(int index) {
+    Materia m = materias[index];
+    _codigoController.text = m.nmat;
+    _descripcionController.text = m.descripcion;
+
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Agregar Materia'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                TextField(
-                  controller: _codigoController,
-                  decoration: const InputDecoration(
-                    hintText: 'Código de la Materia',
-                  ),
-                ),
-                TextField(
-                  controller: _descripcionController,
-                  decoration: const InputDecoration(
-                    hintText: 'Descripción de la Materia',
-                  ),
-                ),
-              ],
+        return ListView(
+          padding: EdgeInsets.all(30),
+          children: [
+            TextField(
+              controller: _codigoController,
+              decoration: const InputDecoration(
+                hintText: 'Código de la Materia',
+              ),
             ),
-          ),
-          actions: <Widget>[
+            SizedBox(height: 20),
+            TextField(
+              controller: _descripcionController,
+              decoration: const InputDecoration(
+                hintText: 'Descripción de la Materia',
+              ),
+            ),
+            SizedBox(height: 20),
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
-              child: const Text('Agregar'),
+              child: const Text('Actualizar'),
               onPressed: () {
-                Materia m = Materia(
-                    nmat: _codigoController.text,
-                    descripcion: _descripcionController.text
-                );
-                DBMaterias.insertar(m).then((value) {
-                  mensaje("SE HA INSERTADO LA MATERIA", Colors.green);
+                m.nmat = _codigoController.text;
+                m.descripcion = _descripcionController.text;
+                DBMaterias.actualizar(m).then((value) {
+                  mensaje("SE HA ACTUALIZADO LA MATERIA", Colors.blue);
                   cargarLista();
                 });
                 Navigator.of(context).pop();
@@ -138,6 +136,8 @@ class _VistaMateriaState extends State<VistaMateria> {
       },
     );
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -167,7 +167,7 @@ class _VistaMateriaState extends State<VistaMateria> {
                   IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () {
-                      // Lógica para editar la materia
+                      _editarMateria(index);
                     },
                   ),
                   IconButton(
