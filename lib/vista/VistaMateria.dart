@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 
+import 'package:dam_u3_practica1_checador/modelo/materia.dart';
+
 class VistaMateria extends StatefulWidget {
   const VistaMateria({super.key});
 
@@ -9,7 +11,7 @@ class VistaMateria extends StatefulWidget {
 }
 
 class _VistaMateriaState extends State<VistaMateria> {
-
+  List<Materia> materias = [];
   final _codigoController = TextEditingController();
   final _descripcionController = TextEditingController();
 
