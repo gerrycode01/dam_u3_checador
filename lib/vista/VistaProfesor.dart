@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
-import 'package:flutter/material.dart';
 
 class VistaProfesor extends StatefulWidget {
   const VistaProfesor({super.key});
@@ -17,13 +17,12 @@ class _VistaProfesorState extends State<VistaProfesor> {
   final _carreraController = TextEditingController();
 
   @override
-
   void initState() {
-    // TODO: implement initState
     super.initState();
     cargarLista();
   }
 
+  @override
   void dispose() {
     _numeroProfesor.dispose();
     _nombreController.dispose();
@@ -39,6 +38,7 @@ class _VistaProfesorState extends State<VistaProfesor> {
   }
 
   void _showAddProfesorDialog() {
+    limpiarCampos();
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -79,12 +79,67 @@ class _VistaProfesorState extends State<VistaProfesor> {
               child: const Text('Agregar'),
               onPressed: () {
                 Profesor p = Profesor(
-                    nprofesor: _numeroProfesor.text,
-                    nombre: _nombreController.text,
-                    carrera: _carreraController.text,
+                  nprofesor: _numeroProfesor.text,
+                  nombre: _nombreController.text,
+                  carrera: _carreraController.text,
                 );
                 DBProfesor.insertar(p).then((value) {
                   mensaje("SE HA INSERTADO EL PROFESOR", Colors.green);
+                  limpiarCampos();
+                  cargarLista();
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editar(int index) {
+    Profesor p = ListaProfesor[index];
+    _nombreController.text = p.nombre;
+    _carreraController.text = p.carrera;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Editar Profesor"),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                  controller: _nombreController,
+                  decoration: InputDecoration(
+                    hintText: p.nombre,
+                  ),
+                ),
+                TextField(
+                  controller: _carreraController,
+                  decoration: InputDecoration(
+                    hintText: p.carrera,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                limpiarCampos();
+              },
+            ),
+            TextButton(
+              child: const Text('Actualizar'),
+              onPressed: () {
+                p.nombre = _nombreController.text;
+                p.carrera = _carreraController.text;
+                DBProfesor.actualizar(p).then((value) {
+                  mensaje("SE HA ACTUALIZADO EL PROFESOR", Colors.blue);
                   limpiarCampos();
                   cargarLista();
                 });
@@ -118,20 +173,22 @@ class _VistaProfesorState extends State<VistaProfesor> {
             child: ListTile(
               title: Text(ListaProfesor[index].nombre),
               subtitle: Text(ListaProfesor[index].carrera),
-              leading: CircleAvatar(child: Text(ListaProfesor[index].nprofesor),),
+              leading: CircleAvatar(child: Text(ListaProfesor[index].nprofesor)),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () {
-
+                      _editar(index);
                     },
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
-                      setState(() {
+                      DBProfesor.eliminar(ListaProfesor[index].nprofesor).then((value) {
+                        mensaje("SE HA ELIMINADO EL PROFESOR", Colors.red);
+                        cargarLista();
                       });
                     },
                   ),
@@ -143,16 +200,16 @@ class _VistaProfesorState extends State<VistaProfesor> {
       ),
     );
   }
+
   void mensaje(String s, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s),backgroundColor: color,
-        )
+        SnackBar(content: Text(s), backgroundColor: color)
     );
   }
+
   void limpiarCampos() {
     _numeroProfesor.clear();
     _nombreController.clear();
     _carreraController.clear();
   }
-
 }

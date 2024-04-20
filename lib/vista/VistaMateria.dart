@@ -1,4 +1,5 @@
 
+import 'package:dam_u3_practica1_checador/controlador/DBMateria.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
@@ -21,6 +22,20 @@ class _VistaMateriaState extends State<VistaMateria> {
     _codigoController.dispose();
     _descripcionController.dispose();
     super.dispose();
+  }
+
+  void cargarLista() async {
+    List<Materia> l = await DBMaterias.mostrar();
+    setState(() {
+      materias = l;
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cargarLista();
   }
 
   void _showAddMateriaDialog() {
@@ -57,7 +72,14 @@ class _VistaMateriaState extends State<VistaMateria> {
             TextButton(
               child: const Text('Agregar'),
               onPressed: () {
-                // Aquí deberías añadir la lógica para validar los campos y guardarlos en la base de datos
+               Materia m = Materia(
+                   nmat: _codigoController.text,
+                   descripcion: _descripcionController.text
+               );
+               DBMaterias.insertar(m).then((value) {
+                 mensaje("SE HA INSERTADO LA MATERIA", Colors.green);
+                 cargarLista();
+               });
                 Navigator.of(context).pop();
               },
             ),
@@ -81,13 +103,14 @@ class _VistaMateriaState extends State<VistaMateria> {
         ],
       ),
       body: ListView.builder(
-        itemCount: 10, // Asumiendo que tienes 10 materias por ahora
+        itemCount: materias.length, // Asumiendo que tienes 10 materias por ahora
         itemBuilder: (context, index) {
           // Aquí iría tu código para generar la lista de materias
           return Card(
             margin: const EdgeInsets.all(8.0),
             child: ListTile(
-              title: Text('Materia #${index + 1}'), // Mostrar información de la materia aquí
+              title: Text(materias[index].descripcion),
+              leading: CircleAvatar(child: Text(materias[index].nmat),),// Mostrar información de la materia aquí
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -112,6 +135,12 @@ class _VistaMateriaState extends State<VistaMateria> {
           );
         },
       ),
+    );
+  }
+  void mensaje(String s, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s),backgroundColor: color,
+        )
     );
   }
 }
