@@ -54,17 +54,22 @@ class DBProfesor {
         .delete('PROFESOR', where: 'NPROFESOR=?', whereArgs: [nprofesor]);
   }
 
-  static Future<List<ProfesorHorario>> query1() async {
+  static Future<List<ProfesorHorario>> query1(
+      String hora, String edificio) async {
     final db = await Conexion.database;
+    // Uso de parámetros para evitar inyección SQL
     String sql = '''
       SELECT 
-      PROFESOR.NPROFESOR, PROFESOR.NOMBRE, PROFESOR.CARRERA,
-      HORARIO.NHORARIO, HORARIO.NMAT, HORARIO.HORA, 
-      HORARIO.EDIFICIO, HORARIO.SALON
-    FROM PROFESOR
-    INNER JOIN HORARIO ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR;
+        PROFESOR.NPROFESOR, PROFESOR.NOMBRE, PROFESOR.CARRERA,
+        HORARIO.NHORARIO, HORARIO.NMAT, HORARIO.HORA, 
+        HORARIO.EDIFICIO, HORARIO.SALON
+      FROM PROFESOR
+      INNER JOIN HORARIO ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR
+      WHERE HORARIO.HORA = ? AND HORARIO.EDIFICIO = ?;
     ''';
-    List<Map<String, dynamic>> resultado = await db.rawQuery(sql);
+    // Ejecución de la consulta con parámetros seguros
+    List<Map<String, dynamic>> resultado =
+        await db.rawQuery(sql, [hora, edificio]);
     return List.generate(
         resultado.length,
         (index) => ProfesorHorario(
