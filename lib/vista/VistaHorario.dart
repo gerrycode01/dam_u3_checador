@@ -1,3 +1,7 @@
+import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
+import 'package:dam_u3_practica1_checador/modelo/horario.dart';
+import 'package:dam_u3_practica1_checador/modelo/materia.dart';
+import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:flutter/material.dart';
 
 class Horarios extends StatefulWidget {
@@ -8,6 +12,10 @@ class Horarios extends StatefulWidget {
 }
 
 class _HorariosState extends State<Horarios> {
+  List<Horario> horarios = [];
+  List<Profesor> profesores = [];
+  List<Materia> materias = [];
+
   final _profesorController = TextEditingController();
   final _materiaController = TextEditingController();
   final _horaController = TextEditingController();
@@ -25,61 +33,92 @@ class _HorariosState extends State<Horarios> {
     _salonController.dispose();
     super.dispose();
   }
-
+  void cargarlista() async {
+    List<Horario> l = await DBHorario.mostrar();
+    //List<Horario> hm = await DBHorario.mostrarPorMateria(nmat)
+    //List<Horario>  hp = await DBHorario.mostrarPorProfesor(nprofesor);
+    setState(() {
+      horarios = l;
+    });
+  }
+int profesorseleccionado = 0;
   void _showAddHorarioDialog() {
-    showDialog(
+    // Clear all fields before showing the dialog
+    _profesorController.clear();
+    _materiaController.clear();
+    _horaController.clear();
+    _edificioController.clear();
+    _salonController.clear();
+
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Agregar Horario'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                TextField(
-                  controller: _profesorController,
-                  decoration: const InputDecoration(
-                    hintText: 'Nombre del Profesor',
-                  ),
-                ),
-                TextField(
-                  controller: _materiaController,
-                  decoration: const InputDecoration(
-                    hintText: 'Materia',
-                  ),
-                ),
-                TextField(
-                  controller: _horaController,
-                  decoration: const InputDecoration(
-                    hintText: 'Hora',
-                  ),
-                ),
-                TextField(
-                  controller: _edificioController,
-                  decoration: const InputDecoration(
-                    hintText: 'Edificio',
-                  ),
-                ),
-                TextField(
-                  controller: _salonController,
-                  decoration: const InputDecoration(
-                    hintText: 'Salón',
-                  ),
-                ),
-              ],
+        return ListView(
+          padding: EdgeInsets.all(30),
+          children: [
+            DropdownButton(
+                items: profesores.map((e) {
+                  return DropdownMenuItem(
+                      child: Text(e.nombre),
+                    value: e.nprofesor,
+                  );
+                }).toList(),
+                onChanged: (valor){
+                  setState(() {
+                    profesorseleccionado = valor! as int;
+                  });
+                }
             ),
-          ),
-          actions: <Widget>[
+            SizedBox(height: 20),
+            TextField(
+              controller: _materiaController,
+              decoration: const InputDecoration(
+                hintText: 'Materia',
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _horaController,
+              decoration: const InputDecoration(
+                hintText: 'Hora',
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _edificioController,
+              decoration: const InputDecoration(
+                hintText: 'Edificio',
+              ),
+            ),
+            SizedBox(height: 20),
+            TextField(
+              controller: _salonController,
+              decoration: const InputDecoration(
+                hintText: 'Salón',
+              ),
+            ),
+            SizedBox(height: 20),
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: const Text('Agregar'),
               onPressed: () {
-                // Aquí deberías añadir la lógica para validar los campos y guardarlos en la base de datos
-                Navigator.of(context).pop();
+                // Horario nuevoHorario = Horario(
+                //   profesor: _profesorController.text,
+                //   materia: _materiaController.text,
+                //   hora: _horaController.text,
+                //   edificio: _edificioController.text,
+                //   salon: _salonController.text,
+                // );
+                // DBHorarios.insertar(nuevoHorario).then((value) {
+                //   mensaje("SE HA INSERTADO EL HORARIO", Colors.green);
+                //   cargarListaHorarios(); // Asegúrate de tener una función para recargar los horarios
+                // });
+                Navigator.of(context). pop();
               },
             ),
           ],
@@ -87,6 +126,7 @@ class _HorariosState extends State<Horarios> {
       },
     );
   }
+
 
   Widget build(BuildContext context) {
     return Scaffold(
