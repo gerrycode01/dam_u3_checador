@@ -82,4 +82,21 @@ class DBProfesor {
             edificio: resultado[index]['EDIFICIO'],
             salon: resultado[index]['SALON']));
   }
+
+  static Future<List<Profesor>> query2(String fecha) async {
+    final db = await Conexion.database;
+    String sql = '''
+     SELECT * FROM PROFESOR 
+     INNER JOIN HORARIO ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR
+     INNER JOIN ASISTENCIA ON ASISTENCIA.NHORARIO = HORARIO.NHORARIO
+     WHERE ASISTENCIA.FECHA = ?
+    ''';
+    List<Map<String, dynamic>> resultado = await db.rawQuery(sql, [fecha]);
+    return List.generate(
+        resultado.length,
+        (index) => Profesor(
+            nprofesor: resultado[index]['NPROFESOR'],
+            nombre: resultado[index]['NOMBRE'],
+            carrera: resultado[index]['CARRERA']));
+  }
 }
