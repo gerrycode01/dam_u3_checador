@@ -5,6 +5,8 @@ class Materia {
   Materia({required this.nmat, required this.descripcion});
 
   Map<String, dynamic> toJSON() {
-    return {'nmat': nmat, 'descripcion': descripcion};
+    return {
+      //'nmat': nmat,
+      'descripcion': descripcion};
   }
 }
