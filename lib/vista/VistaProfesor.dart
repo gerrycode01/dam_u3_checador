@@ -39,36 +39,33 @@ class _VistaProfesorState extends State<VistaProfesor> {
 
   void _showAddProfesorDialog() {
     limpiarCampos();
-    showDialog(
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Agregar Profesor'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                TextField(
-                  controller: _numeroProfesor,
-                  decoration: const InputDecoration(
-                    hintText: 'Numero del Profesor',
-                  ),
-                ),
-                TextField(
-                  controller: _nombreController,
-                  decoration: const InputDecoration(
-                    hintText: 'Nombre del Profesor',
-                  ),
-                ),
-                TextField(
-                  controller: _carreraController,
-                  decoration: const InputDecoration(
-                    hintText: 'Carrera',
-                  ),
-                ),
-              ],
+        return ListView(
+          padding: EdgeInsets.all(30),
+          children: [
+            TextField(
+              controller: _numeroProfesor,
+              decoration: const InputDecoration(
+                hintText: 'Numero del Profesor',
+              ),
             ),
-          ),
-          actions: <Widget>[
+            SizedBox(height: 20,),
+            TextField(
+              controller: _nombreController,
+              decoration: const InputDecoration(
+                hintText: 'Nombre del Profesor',
+              ),
+            ),
+            SizedBox(height: 20,),
+            TextField(
+              controller: _carreraController,
+              decoration: const InputDecoration(
+              hintText: 'Carrera',
+              ),
+            ),
+            SizedBox(height: 20,),
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
@@ -99,33 +96,31 @@ class _VistaProfesorState extends State<VistaProfesor> {
 
   void _editar(int index) {
     Profesor p = ListaProfesor[index];
+    _numeroProfesor.text = p.nprofesor;
     _nombreController.text = p.nombre;
     _carreraController.text = p.carrera;
 
-    showDialog(
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text("Editar Profesor"),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                TextField(
-                  controller: _nombreController,
-                  decoration: InputDecoration(
-                    hintText: p.nombre,
-                  ),
-                ),
-                TextField(
-                  controller: _carreraController,
-                  decoration: InputDecoration(
-                    hintText: p.carrera,
-                  ),
-                ),
-              ],
+        return ListView(
+          padding: EdgeInsets.all(30),
+          children: [
+            TextField(
+
+              controller: _nombreController,
+              decoration: const InputDecoration(
+                hintText: 'Nombre del Profesor',
+              ),
             ),
-          ),
-          actions: <Widget>[
+            SizedBox(height: 20,),
+            TextField(
+              controller: _carreraController,
+              decoration: const InputDecoration(
+                hintText: 'Carrera',
+              ),
+            ),
+            SizedBox(height: 20,),
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {

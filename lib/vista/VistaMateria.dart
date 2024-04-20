@@ -88,6 +88,56 @@ class _VistaMateriaState extends State<VistaMateria> {
       },
     );
   }
+  void _editarmateria(int index){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Agregar Materia'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                TextField(
+                  controller: _codigoController,
+                  decoration: const InputDecoration(
+                    hintText: 'Código de la Materia',
+                  ),
+                ),
+                TextField(
+                  controller: _descripcionController,
+                  decoration: const InputDecoration(
+                    hintText: 'Descripción de la Materia',
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop(); // Cierra el diálogo
+              },
+            ),
+            TextButton(
+              child: const Text('Agregar'),
+              onPressed: () {
+                Materia m = Materia(
+                    nmat: _codigoController.text,
+                    descripcion: _descripcionController.text
+                );
+                DBMaterias.insertar(m).then((value) {
+                  mensaje("SE HA INSERTADO LA MATERIA", Colors.green);
+                  cargarLista();
+                });
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
