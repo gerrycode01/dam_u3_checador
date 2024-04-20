@@ -5,15 +5,22 @@ import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesorHorario.dart';
 
 class DBProfesor {
-  static Future<int> insertar(Profesor profesor) async {
+  static Future<void> insertar(Profesor profesor) async {
     final db = await Conexion.database;
-
-    Profesor profe = await mostrarUno(profesor.nprofesor);
-    if (profe != null) {
-      return 0;
+    try {
+      String sql = 'INSERT INTO PROFESOR (NPROFESOR, NOMBRE, CARRERA) VALUES (?, ?, ?)';
+      List<dynamic> parametros = [profesor.nprofesor, profesor.nombre, profesor.carrera];
+      final int result = await db.rawInsert(sql, parametros);
+      if (result == 0) {
+        throw Exception('ERROR NO JALO METER AL PROFE');
+      }
+    } catch (e) {
+      print('ERROR, AQUI PORQUE: $e');
+      throw Exception('Database error: $e');
     }
-    return db.insert('PROFESOR', profesor.toJSON());
   }
+
+
 
   static Future<List<Profesor>> mostrar() async {
     final db = await Conexion.database;

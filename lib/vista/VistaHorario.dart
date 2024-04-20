@@ -33,10 +33,15 @@ class _HorariosState extends State<Horarios> {
     _salonController.dispose();
     super.dispose();
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
   void cargarlista() async {
     List<Horario> l = await DBHorario.mostrar();
-    //List<Horario> hm = await DBHorario.mostrarPorMateria(nmat)
-    //List<Horario>  hp = await DBHorario.mostrarPorProfesor(nprofesor);
     setState(() {
       horarios = l;
     });
