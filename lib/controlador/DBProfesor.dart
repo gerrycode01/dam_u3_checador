@@ -2,13 +2,14 @@ import 'package:dam_u3_practica1_checador/controlador/DB.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
 import 'package:dam_u3_practica1_checador/modelo/horario.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
+import 'package:dam_u3_practica1_checador/modelo/profesorHorario.dart';
 
 class DBProfesor {
   static Future<int> insertar(Profesor profesor) async {
     final db = await Conexion.database;
 
     Profesor profe = await mostrarUno(profesor.nprofesor);
-    if(profe != null ){
+    if (profe != null) {
       return 0;
     }
     return db.insert('PROFESOR', profesor.toJSON());
@@ -51,5 +52,29 @@ class DBProfesor {
 
     return await db
         .delete('PROFESOR', where: 'NPROFESOR=?', whereArgs: [nprofesor]);
+  }
+
+  static Future<List<ProfesorHorario>> query1() async {
+    final db = await Conexion.database;
+    String sql = '''
+      SELECT 
+      PROFESOR.NPROFESOR, PROFESOR.NOMBRE, PROFESOR.CARRERA,
+      HORARIO.NHORARIO, HORARIO.NMAT, HORARIO.HORA, 
+      HORARIO.EDIFICIO, HORARIO.SALON
+    FROM PROFESOR
+    INNER JOIN HORARIO ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR;
+    ''';
+    List<Map<String, dynamic>> resultado = await db.rawQuery(sql);
+    return List.generate(
+        resultado.length,
+        (index) => ProfesorHorario(
+            nprofesor: resultado[index]['NPROFESOR'],
+            nombre: resultado[index]['NOMBRE'],
+            carrera: resultado[index]['CARRERA'],
+            nhorario: resultado[index]['NHORARIO'],
+            nmat: resultado[index]['NMAT'],
+            hora: resultado[index]['HORA'],
+            edificio: resultado[index]['EDIFICIO'],
+            salon: resultado[index]['SALON']));
   }
 }
