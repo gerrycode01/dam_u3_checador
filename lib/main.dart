@@ -1,3 +1,7 @@
+import 'package:dam_u3_practica1_checador/vista/VistaAsistencia.dart';
+import 'package:dam_u3_practica1_checador/vista/VistaHorario.dart';
+import 'package:dam_u3_practica1_checador/vista/VistaMateria.dart';
+import 'package:dam_u3_practica1_checador/vista/VistaProfesor.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());
@@ -44,14 +48,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
+        backgroundColor: Colors.grey.shade500,
       ),
       drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
         child: ListView(
-          // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: [
             const DrawerHeader(
@@ -70,32 +70,31 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.schedule),
               title: const Text('Horarios'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Horarios()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.person),
               title: const Text('Profesores'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Profesor()));
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.book),
+              title: const Text('Materias'),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Materia()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.check_circle),
-              title: const Text('Asistencia'),
+              title: const Text('Asistencias'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const Asistencia()));
               },
             ),
+
           ],
         ),
       ),
@@ -133,14 +132,13 @@ class _MyHomePageState extends State<MyHomePage> {
       default:
         return GridView.builder(
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2, // Number of columns
-            crossAxisSpacing: 10.0, // Space between columns
-            mainAxisSpacing: 10.0, // Space between rows
-            childAspectRatio: 1.0, // Aspect ratio of the cards
+            crossAxisCount: 2,
+            crossAxisSpacing: 10.0,
+            childAspectRatio: 1.0,
           ),
-          itemCount: 10, // Number of items in your list
+          itemCount: 10,
           itemBuilder: (context, index) => Card(
-            // Replace with your dynamic content
+
             child: Center(child: Text('Item $index')),
           ),
         );
