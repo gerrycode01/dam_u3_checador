@@ -70,14 +70,14 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.person),
               title: const Text('Profesores'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const Profesor()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const VistaProfesor()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.book),
               title: const Text('Materias'),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const Materia()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const VistaMateria()));
               },
             ),
             ListTile(

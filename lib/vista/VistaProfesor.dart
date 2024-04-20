@@ -2,14 +2,14 @@ import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:flutter/material.dart';
 
-class Profesor extends StatefulWidget {
-  const Profesor({super.key});
+class VistaProfesor extends StatefulWidget {
+  const VistaProfesor({super.key});
 
   @override
-  State<Profesor> createState() => _ProfesorState();
+  State<VistaProfesor> createState() => _VistaProfesorState();
 }
 
-class _ProfesorState extends State<Profesor> {
+class _VistaProfesorState extends State<VistaProfesor> {
   List<Profesor> ListaProfesor = [];
 
   final _numeroProfesor = TextEditingController();
@@ -17,6 +17,13 @@ class _ProfesorState extends State<Profesor> {
   final _carreraController = TextEditingController();
 
   @override
+
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cargarLista();
+  }
+
   void dispose() {
     _numeroProfesor.dispose();
     _nombreController.dispose();
@@ -25,7 +32,7 @@ class _ProfesorState extends State<Profesor> {
   }
 
   void cargarLista() async {
-    List<Profesor> l = (await DBProfesor.mostrar()).cast<Profesor>();
+    List<Profesor> l = await DBProfesor.mostrar();
     setState(() {
       ListaProfesor = l;
     });
@@ -71,7 +78,16 @@ class _ProfesorState extends State<Profesor> {
             TextButton(
               child: const Text('Agregar'),
               onPressed: () {
-                // Aquí deberías añadir la lógica para validar los campos y guardarlos en la base de datos
+                Profesor p = Profesor(
+                    nprofesor: _numeroProfesor.text,
+                    nombre: _nombreController.text,
+                    carrera: _carreraController.text,
+                );
+                DBProfesor.insertar(p).then((value) {
+                  mensaje("SE HA INSERTADO EL PROFESOR", Colors.green);
+                  limpiarCampos();
+                  cargarLista();
+                });
                 Navigator.of(context).pop();
               },
             ),
@@ -95,13 +111,14 @@ class _ProfesorState extends State<Profesor> {
         ],
       ),
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: ListaProfesor.length,
         itemBuilder: (context, index) {
-
           return Card(
             margin: const EdgeInsets.all(8.0),
             child: ListTile(
-              title: Text('Profesor #${index + 1}'),
+              title: Text(ListaProfesor[index].nombre),
+              subtitle: Text(ListaProfesor[index].carrera),
+              leading: CircleAvatar(child: Text(ListaProfesor[index].nprofesor),),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -126,4 +143,16 @@ class _ProfesorState extends State<Profesor> {
       ),
     );
   }
+  void mensaje(String s, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s),backgroundColor: color,
+        )
+    );
+  }
+  void limpiarCampos() {
+    _numeroProfesor.clear();
+    _nombreController.clear();
+    _carreraController.clear();
+  }
+
 }

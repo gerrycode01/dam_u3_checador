@@ -58,7 +58,7 @@ class _AsistenciaState extends State<Asistencia> {
                     hintText: 'Nombre del Profesor',
                   ),
                 ),
-                DropdownButtonFormField(
+                /*DropdownButtonFormField(
                     items: ListaAsistencia.map((e) {
                       return DropdownMenuItem(
                         child: Text(e),
@@ -70,7 +70,7 @@ class _AsistenciaState extends State<Asistencia> {
                         asistenciaseleccionada = valor!;
                       });
                     }
-                ),
+                ),*/
               ],
             ),
           ),

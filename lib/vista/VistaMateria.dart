@@ -1,14 +1,15 @@
+
 import 'package:flutter/material.dart';
 
-class Materia extends StatefulWidget {
-  const Materia({super.key});
+class VistaMateria extends StatefulWidget {
+  const VistaMateria({super.key});
 
   @override
-  State<Materia> createState() => _MateriaState();
+  State<VistaMateria> createState() => _VistaMateriaState();
 }
 
-class _MateriaState extends State<Materia> {
-  // Controladores de texto para los campos del formulario
+class _VistaMateriaState extends State<VistaMateria> {
+
   final _codigoController = TextEditingController();
   final _descripcionController = TextEditingController();
 
@@ -32,7 +33,7 @@ class _MateriaState extends State<Materia> {
                 TextField(
                   controller: _codigoController,
                   decoration: const InputDecoration(
-                    hintText: 'Numero de la Materia',
+                    hintText: 'Código de la Materia',
                   ),
                 ),
                 TextField(
