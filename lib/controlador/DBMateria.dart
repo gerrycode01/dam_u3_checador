@@ -43,4 +43,22 @@ class DBMaterias {
 
     return await db.delete('MATERIA', where: 'NMAT=?', whereArgs: [nmat]);
   }
+
+  //LIsta de materias que imparte un profesor
+  static Future<List<Materia>> query3(String nprofesor) async {
+    final db = await Conexion.database;
+    String sql = '''
+      SELECT MATERIA.NMAT, MATERIA.DESCRIPCION FROM MATERIA
+      INNER JOIN HORARIO ON HORARIO.NMAT = MATERIA.NMAT
+      INNER JOIN PROFESOR ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR
+      WHERE PROFESOR.NPROFESOR = ? 
+      GROUP BY MATERIA.NMAT
+    ''';
+    List<Map<String, dynamic>> resultado = await db.rawQuery(sql, [nprofesor]);
+    return List.generate(
+        resultado.length,
+        (index) => Materia(
+            nmat: resultado[index]['NMAT'],
+            descripcion: resultado[index]['DESCRIPCION']));
+  }
 }
