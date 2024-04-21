@@ -199,13 +199,37 @@ class _VistaProfesorState extends State<VistaProfesor> {
                   IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
-                      DBProfesor.eliminar(listaProfesor[index].nprofesor)
-                          .then((value) {
-                        mensaje("SE HA ELIMINADO EL PROFESOR", Colors.red);
-                        cargarLista();
-                      });
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar Eliminación'),
+                            content: const Text('¿Estás seguro de que quieres eliminar este profesor?'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Cancelar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Eliminar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Cierra el diálogo
+                                  // Aquí se realiza la eliminación después de la confirmación
+                                  DBProfesor.eliminar(listaProfesor[index].nprofesor).then((value) {
+                                    mensaje("SE HA ELIMINADO EL PROFESOR", Colors.red);
+                                    cargarLista(); // Refresca la lista después de eliminar
+                                  });
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
-                  ),
+                  )
+                  ,
                 ],
               ),
             ),
