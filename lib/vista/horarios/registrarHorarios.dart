@@ -1,7 +1,5 @@
-import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBMateria.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
-import 'package:dam_u3_practica1_checador/modelo/horario.dart';
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:flutter/material.dart';
@@ -13,36 +11,46 @@ class RegistrarHorarios extends StatefulWidget {
   State<RegistrarHorarios> createState() => _RegistrarHorariosState();
 }
 
+List<String> generateTimes() {
+  List<String> times = [];
+  for (int i = 7; i <= 21; i++) {
+    String hour = i.toString().padLeft(2, '0');  // Asegura el formato de dos dígitos
+    times.add("$hour:00");
+  }
+  return times;
+}
 class _RegistrarHorariosState extends State<RegistrarHorarios> {
-  List<Horario> horarios = [];
   List<Profesor> profesores = [];
   List<Materia> materias = [];
-  int profesorseleccionado = 0;
-  final _profesorController = TextEditingController();
-  final _materiaController = TextEditingController();
   final _horaController = TextEditingController();
-  final _edificioController = TextEditingController();
-  final _salonController = TextEditingController();
-
   var idProfesor;
-
   var idMateria;
 
-  @override
+  Map<String, List<String>> edificiosYSalones = {
+    'CB': ['CB1', 'CB2', 'CB3', 'CB4'],
+    'UVP': ['LCUVP1', 'LCUVP2', 'LCUVP3', 'MTI1'],
+    'LC': ['TDM', 'ACISCO', 'LCSG', 'LCSO'],
+    'UD': ['UD1', 'UD2', 'UD11', 'UD12'],
+  };
 
+  String? selectedTime;
+  List<String> times = generateTimes();
+
+  String? selectedEdificio;
+  String? selectedSalon;
+
+  @override
   void dispose() {
-    _profesorController.dispose();
-    _materiaController.dispose();
     _horaController.dispose();
-    _edificioController.dispose();
-    _salonController.dispose();
     super.dispose();
   }
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    cargarlista();
+    cargarMaterias();
+    cargarProfesores();
   }
 
   void cargarProfesores() async {
@@ -59,72 +67,100 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
     });
   }
 
-  void cargarlista() async {
-    List<Horario> l = await DBHorario.mostrar();
-    setState(() {
-      horarios = l;
-    });
-  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Registrar Horario"),
+        title: const Text("Registrar Horario"),
         centerTitle: true,
       ),
       body: ListView(
-        padding: EdgeInsets.all(30),
+        padding: const EdgeInsets.all(30),
         children: [
           DropdownButtonFormField(
+              hint: const Text("Selecciona un maestro"),
               value: idProfesor,
               items: profesores.map((e) {
                 return DropdownMenuItem(
-                    value: e.nprofesor,
-                    child: Text(e.nombre)
-                );
+                    value: e.nprofesor, child: Text(e.nombre));
               }).toList(),
-              onChanged: (valor){
+              onChanged: (valor) {
                 setState(() {
                   idProfesor = valor!;
                 });
-              }
-          ),
-          SizedBox(height: 20),
+              }),
+          const SizedBox(height: 20),
           DropdownButtonFormField(
-            value: idMateria,
+              hint: const Text("Selecciona una materia"),
+              value: idMateria,
               items: materias.map((e) {
                 return DropdownMenuItem(
-                  value: e.nmat,
-                    child: Text(e.descripcion)
+                    value: e.nmat, child: Text(e.descripcion));
+              }).toList(),
+              onChanged: (valor) {
+                setState(() {
+                  idMateria = valor!;
+                });
+              }),
+          const SizedBox(height: 20),
+          DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: 'Selecciona una hora',
+              border: OutlineInputBorder(),
+            ),
+            value: selectedTime,
+            onChanged: (newValue) {
+              setState(() {
+                selectedTime = newValue;
+              });
+            },
+            items: times.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          const SizedBox(height: 20),
+          DropdownButtonFormField<String>(
+            value: selectedEdificio,
+            hint: const Text("Selecciona un edificio"),
+            onChanged: (newValue) {
+              setState(() {
+                print(newValue);
+                selectedEdificio = newValue;
+                selectedSalon =
+                    null; // Resetea el salón cuando cambia el edificio
+              });
+            },
+            items: edificiosYSalones.keys
+                .map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+          ),
+          if (selectedEdificio != null) ...[
+            const SizedBox(height: 20),
+            DropdownButtonFormField<String>(
+              value: selectedSalon,
+              hint: const Text("Selecciona un salón"),
+              onChanged: (newValue) {
+                setState(() {
+                  selectedSalon = newValue;
+                });
+              },
+              items: edificiosYSalones[selectedEdificio]!
+                  .map<DropdownMenuItem<String>>((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
                 );
               }).toList(),
-              onChanged: (valor){
-              setState(() {
-                idMateria = valor!;
-              });
-              }
-          ),
-          SizedBox(height: 20),
-          TextField(
-            controller: _horaController,
-            decoration: const InputDecoration(
-              hintText: 'Hora',
             ),
-          ),
-          SizedBox(height: 20),
-          TextField(
-            controller: _edificioController,
-            decoration: const InputDecoration(
-              hintText: 'Edificio',
-            ),
-          ),
-          SizedBox(height: 20),
-          TextField(
-            controller: _salonController,
-            decoration: const InputDecoration(
-              hintText: 'Salón',
-            ),
-          ),
-          SizedBox(height: 20),
+          ],
+          const SizedBox(height: 20),
           TextButton(
             child: const Text('Cancelar'),
             onPressed: () {
@@ -134,18 +170,8 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
           TextButton(
             child: const Text('Agregar'),
             onPressed: () {
-              // Horario nuevoHorario = Horario(
-              //   profesor: _profesorController.text,
-              //   materia: _materiaController.text,
-              //   hora: _horaController.text,
-              //   edificio: _edificioController.text,
-              //   salon: _salonController.text,
-              // );
-              // DBHorarios.insertar(nuevoHorario).then((value) {
-              //   mensaje("SE HA INSERTADO EL HORARIO", Colors.green);
-              //   cargarListaHorarios(); // Asegúrate de tener una función para recargar los horarios
-              // });
-              Navigator.of(context). pop();
+
+              Navigator.of(context).pop();
             },
           ),
         ],
