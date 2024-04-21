@@ -41,47 +41,48 @@ class _VistaMateriaState extends State<VistaMateria> {
   }
 
   void _showAddMateriaDialog() {
-    showDialog(
+    limpiarCampos(); // Asegúrate de que esta función limpia los controladores de texto
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Agregar Materia'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                TextField(
-                  controller: _codigoController,
-                  decoration: const InputDecoration(
-                    hintText: 'Código de la Materia',
-                  ),
-                ),
-                TextField(
-                  controller: _descripcionController,
-                  decoration: const InputDecoration(
-                    hintText: 'Descripción de la Materia',
-                  ),
-                ),
-              ],
+        return ListView(
+          padding: const EdgeInsets.all(30),
+          children: [
+            TextField(
+              controller: _codigoController,
+              decoration: const InputDecoration(
+                hintText: 'Código de la Materia',
+              ),
             ),
-          ),
-          actions: <Widget>[
+            const SizedBox(
+              height: 20,
+            ),
+            TextField(
+              controller: _descripcionController,
+              decoration: const InputDecoration(
+                hintText: 'Descripción de la Materia',
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
+                Navigator.of(context).pop();
               },
             ),
             TextButton(
               child: const Text('Agregar'),
               onPressed: () {
-               Materia m = Materia(
-                   nmat: _codigoController.text,
-                   descripcion: _descripcionController.text
-               );
-               DBMaterias.insertar(m).then((value) {
-                 mensaje("SE HA INSERTADO LA MATERIA", Colors.green);
-                 cargarLista();
-               });
+                Materia m = Materia(
+                    nmat: _codigoController.text,
+                    descripcion: _descripcionController.text
+                );
+                DBMaterias.insertar(m).then((value) {
+                  mensaje("SE HA INSERTADO LA MATERIA", Colors.green);
+                  cargarLista();
+                });
                 Navigator.of(context).pop();
               },
             ),
@@ -90,6 +91,8 @@ class _VistaMateriaState extends State<VistaMateria> {
       },
     );
   }
+
+
   void _editarMateria(int index) {
     Materia m = materias[index];
     _codigoController.text = m.nmat;
@@ -194,5 +197,9 @@ class _VistaMateriaState extends State<VistaMateria> {
         SnackBar(content: Text(s),backgroundColor: color,
         )
     );
+  }
+  void limpiarCampos() {
+    _codigoController.clear();
+    _descripcionController.clear();
   }
 }
