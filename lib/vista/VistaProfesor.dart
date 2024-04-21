@@ -10,7 +10,7 @@ class VistaProfesor extends StatefulWidget {
 }
 
 class _VistaProfesorState extends State<VistaProfesor> {
-  List<Profesor> ListaProfesor = [];
+  List<Profesor> listaProfesor = [];
 
   final _numeroProfesor = TextEditingController();
   final _nombreController = TextEditingController();
@@ -33,7 +33,7 @@ class _VistaProfesorState extends State<VistaProfesor> {
   void cargarLista() async {
     List<Profesor> l = await DBProfesor.mostrar();
     setState(() {
-      ListaProfesor = l;
+      listaProfesor = l;
     });
   }
 
@@ -43,7 +43,7 @@ class _VistaProfesorState extends State<VistaProfesor> {
       context: context,
       builder: (BuildContext context) {
         return ListView(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           children: [
             TextField(
               controller: _numeroProfesor,
@@ -51,21 +51,27 @@ class _VistaProfesorState extends State<VistaProfesor> {
                 hintText: 'Numero del Profesor',
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             TextField(
               controller: _nombreController,
               decoration: const InputDecoration(
                 hintText: 'Nombre del Profesor',
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             TextField(
               controller: _carreraController,
               decoration: const InputDecoration(
-              hintText: 'Carrera',
+                hintText: 'Carrera',
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
@@ -81,6 +87,10 @@ class _VistaProfesorState extends State<VistaProfesor> {
                   carrera: _carreraController.text,
                 );
                 DBProfesor.insertar(p).then((value) {
+                  if (value == 0) {
+                    mensaje('INSERCION INCORRECTA', Colors.red);
+                    return;
+                  }
                   mensaje("SE HA INSERTADO EL PROFESOR", Colors.green);
                   limpiarCampos();
                   cargarLista();
@@ -95,7 +105,7 @@ class _VistaProfesorState extends State<VistaProfesor> {
   }
 
   void _editar(int index) {
-    Profesor p = ListaProfesor[index];
+    Profesor p = listaProfesor[index];
     _numeroProfesor.text = p.nprofesor;
     _nombreController.text = p.nombre;
     _carreraController.text = p.carrera;
@@ -104,23 +114,26 @@ class _VistaProfesorState extends State<VistaProfesor> {
       context: context,
       builder: (BuildContext context) {
         return ListView(
-          padding: EdgeInsets.all(30),
+          padding: const EdgeInsets.all(30),
           children: [
             TextField(
-
               controller: _nombreController,
               decoration: const InputDecoration(
                 hintText: 'Nombre del Profesor',
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             TextField(
               controller: _carreraController,
               decoration: const InputDecoration(
                 hintText: 'Carrera',
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(
+              height: 20,
+            ),
             TextButton(
               child: const Text('Cancelar'),
               onPressed: () {
@@ -134,6 +147,10 @@ class _VistaProfesorState extends State<VistaProfesor> {
                 p.nombre = _nombreController.text;
                 p.carrera = _carreraController.text;
                 DBProfesor.actualizar(p).then((value) {
+                  if (value == 0) {
+                    mensaje('NO SE ACTUALIZO EL REGISTRO', Colors.red);
+                    return;
+                  }
                   mensaje("SE HA ACTUALIZADO EL PROFESOR", Colors.blue);
                   limpiarCampos();
                   cargarLista();
@@ -161,14 +178,15 @@ class _VistaProfesorState extends State<VistaProfesor> {
         ],
       ),
       body: ListView.builder(
-        itemCount: ListaProfesor.length,
+        itemCount: listaProfesor.length,
         itemBuilder: (context, index) {
           return Card(
             margin: const EdgeInsets.all(8.0),
             child: ListTile(
-              title: Text(ListaProfesor[index].nombre),
-              subtitle: Text(ListaProfesor[index].carrera),
-              leading: CircleAvatar(child: Text(ListaProfesor[index].nprofesor)),
+              title: Text(listaProfesor[index].nombre),
+              subtitle: Text(listaProfesor[index].carrera),
+              leading:
+                  CircleAvatar(child: Text(listaProfesor[index].nprofesor)),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -181,7 +199,8 @@ class _VistaProfesorState extends State<VistaProfesor> {
                   IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
-                      DBProfesor.eliminar(ListaProfesor[index].nprofesor).then((value) {
+                      DBProfesor.eliminar(listaProfesor[index].nprofesor)
+                          .then((value) {
                         mensaje("SE HA ELIMINADO EL PROFESOR", Colors.red);
                         cargarLista();
                       });
@@ -197,9 +216,8 @@ class _VistaProfesorState extends State<VistaProfesor> {
   }
 
   void mensaje(String s, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s), backgroundColor: color)
-    );
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(s), backgroundColor: color));
   }
 
   void limpiarCampos() {

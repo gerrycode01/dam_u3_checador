@@ -9,7 +9,7 @@ class DBProfesor {
     final db = await Conexion.database;
 
     Profesor profe = await mostrarUno(profesor.nprofesor);
-    if (profe.nombre.isEmpty!) {
+    if (profe.nombre.isNotEmpty) {
       return 0;
     }
     return db.insert('PROFESOR', profesor.toJSON());
@@ -30,10 +30,17 @@ class DBProfesor {
     final db = await Conexion.database;
     List<Map<String, dynamic>> profesor = await db
         .query('PROFESOR', where: 'NPROFESOR=?', whereArgs: [nprofesor]);
-    return Profesor(
-        nprofesor: profesor[0]['NPROFESOR'],
-        nombre: profesor[0]['NOMBRE'],
-        carrera: profesor[0]['CARRERA']);
+
+    // Verifica si la consulta devolvió algún resultado
+    if (profesor.isNotEmpty) {
+      return Profesor(
+          nprofesor: profesor[0]['NPROFESOR'],
+          nombre: profesor[0]['NOMBRE'],
+          carrera: profesor[0]['CARRERA']);
+    } else {
+      // Retorna un Profesor con valores vacíos si no hay resultados
+      return Profesor(nprofesor: '', nombre: '', carrera: '');
+    }
   }
 
   static Future<int> actualizar(Profesor profesor) async {
