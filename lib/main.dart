@@ -1,7 +1,7 @@
-import 'package:dam_u3_practica1_checador/vista/VistaAsistencia.dart';
-import 'package:dam_u3_practica1_checador/vista/VistaHorario.dart';
-import 'package:dam_u3_practica1_checador/vista/VistaMateria.dart';
-import 'package:dam_u3_practica1_checador/vista/VistaProfesor.dart';
+import 'package:dam_u3_practica1_checador/vista/asistencias/VistaAsistencia.dart';
+import 'package:dam_u3_practica1_checador/vista/horarios/VistaHorario.dart';
+import 'package:dam_u3_practica1_checador/vista/materias/VistaMateria.dart';
+import 'package:dam_u3_practica1_checador/vista/profesores/VistaProfesor.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(const MyApp());

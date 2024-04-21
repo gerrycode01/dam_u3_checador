@@ -1,5 +1,6 @@
 
 import 'package:dam_u3_practica1_checador/controlador/DBMateria.dart';
+import 'package:dam_u3_practica1_checador/vista/materias/registrarmateria.dart';
 import 'package:flutter/material.dart';
 
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
@@ -153,7 +154,9 @@ class _VistaMateriaState extends State<VistaMateria> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _showAddMateriaDialog,
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const RegistrarMateria()));
+            },
           ),
         ],
       ),
@@ -178,12 +181,36 @@ class _VistaMateriaState extends State<VistaMateria> {
                   IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
-                      // Lógica para eliminar la materia
-                      setState(() {
-                        // Aquí eliminarías la materia de tu lista o base de datos
-                      });
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar Eliminación'),
+                            content: const Text('¿Estás seguro de que quieres eliminar este profesor?'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Cancelar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Eliminar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Cierra el diálogo
+                                  // Aquí se realiza la eliminación después de la confirmación
+                                  DBMaterias.eliminar(materias[index].nmat).then((value) {
+                                    mensaje("SE HA ELIMINADO EL PROFESOR", Colors.red);
+                                    cargarLista(); // Refresca la lista después de eliminar
+                                  });
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
-                  ),
+                  )
                 ],
               ),
             ),

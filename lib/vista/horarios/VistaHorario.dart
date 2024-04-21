@@ -4,6 +4,7 @@ import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/horario.dart';
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
+import 'package:dam_u3_practica1_checador/vista/horarios/registrarHorarios.dart';
 import 'package:flutter/material.dart';
 
 class Horarios extends StatefulWidget {
@@ -40,6 +41,7 @@ class _HorariosState extends State<Horarios> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    cargarlista();
   }
 
   void cargarProfesores() async {
@@ -74,20 +76,22 @@ int profesorseleccionado = 0;
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
+        var idProfesor;
         return ListView(
           padding: EdgeInsets.all(30),
           children: [
-            DropdownButton(
+            DropdownButtonFormField(
+              value: idProfesor,
                 items: profesores.map((e) {
                   return DropdownMenuItem(
-                      child: Text(e.nombre),
-                    value: e.nprofesor,
+                      value: e.nprofesor,
+                      child: Text(e.nombre)
                   );
                 }).toList(),
                 onChanged: (valor){
-                  setState(() {
-                    profesorseleccionado = valor! as int;
-                  });
+                setState(() {
+                  idProfesor = valor!;
+                });
                 }
             ),
             SizedBox(height: 20),
@@ -157,7 +161,9 @@ int profesorseleccionado = 0;
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _showAddHorarioDialog,
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const RegistrarHorarios()));
+            },
           ),
         ],
       ),
