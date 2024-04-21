@@ -1,4 +1,6 @@
 import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
+import 'package:dam_u3_practica1_checador/controlador/DBMateria.dart';
+import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/horario.dart';
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
@@ -38,6 +40,20 @@ class _HorariosState extends State<Horarios> {
   void initState() {
     // TODO: implement initState
     super.initState();
+  }
+
+  void cargarProfesores() async {
+    List<Profesor> profesoresList = await DBProfesor.mostrar();
+    setState(() {
+      profesores = profesoresList;
+    });
+  }
+
+  void cargarMaterias() async {
+    List<Materia> materiasList = await DBMaterias.mostrar();
+    setState(() {
+      materias = materiasList;
+    });
   }
 
   void cargarlista() async {

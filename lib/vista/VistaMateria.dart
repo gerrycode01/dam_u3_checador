@@ -29,7 +29,9 @@ class _VistaMateriaState extends State<VistaMateria> {
     setState(() {
       materias = l;
     });
+    print("Materias cargadas: ${materias.length}"); // Esto imprimirá la cantidad de materias cargadas
   }
+
 
   @override
   void initState() {
