@@ -1,3 +1,4 @@
+import 'package:dam_u3_practica1_checador/vista/asistencias/registrarAsistencia.dart';
 import 'package:flutter/material.dart';
 import 'package:dam_u3_practica1_checador/modelo/asistencia.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBAsistencia.dart';
@@ -26,73 +27,61 @@ class _AsistenciaState extends State<Asistencia> {
   }
 
   void _showAddAsistenciaDialog() {
-    showDialog(
+    showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Registrar Asistencia'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                TextField(
-                  controller: _fechaController,
-                  decoration: const InputDecoration(
-                    hintText: 'Fecha',
-                  ),
-                  onTap: () async {
-                    // Mostrar picker de fecha
-                    DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                    );
-                    if (pickedDate != null) {
-                      _fechaController.text = pickedDate.toString().substring(0, 10); // Formatea la fecha como yyyy-mm-dd
-                    }
-                  },
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                controller: _fechaController,
+                decoration: const InputDecoration(
+                  hintText: 'Fecha',
                 ),
-                TextField(
-                  controller: _profesorController,
-                  decoration: const InputDecoration(
-                    hintText: 'Nombre del Profesor',
-                  ),
+                onTap: () async {
+                  // Mostrar picker de fecha
+                  DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                  );
+                  if (pickedDate != null) {
+                    _fechaController.text = pickedDate.toString().substring(0, 10); // Formatea la fecha como yyyy-mm-dd
+                  }
+                },
+              ),
+              const SizedBox(height: 20),
+              TextField(
+                controller: _profesorController,
+                decoration: const InputDecoration(
+                  hintText: 'Nombre del Profesor',
                 ),
-                /*DropdownButtonFormField(
-                    items: ListaAsistencia.map((e) {
-                      return DropdownMenuItem(
-                        child: Text(e),
-                        value: e.artistaid,
-                      );
-                    }).toList(),
-                    onChanged: (valor){
-                      setState(() {
-                        asistenciaseleccionada = valor!;
-                      });
-                    }
-                ),*/
-              ],
-            ),
+              ),
+              const SizedBox(height: 20),
+              // Aquí iría tu DropdownButtonFormField si decides implementarlo
+              TextButton(
+                child: const Text('Cancelar'),
+                onPressed: () {
+                  Navigator.of(context).pop(); // Cierra el modal
+                },
+              ),
+              TextButton(
+                child: const Text('Registrar'),
+                onPressed: () {
+                  // Aquí deberías añadir la lógica para validar los campos y guardarlos en la base de datos
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
           ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop(); // Cierra el diálogo
-              },
-            ),
-            TextButton(
-              child: const Text('Registrar'),
-              onPressed: () {
-                // Aquí deberías añadir la lógica para validar los campos y guardarlos en la base de datos
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
         );
       },
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +92,9 @@ class _AsistenciaState extends State<Asistencia> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _showAddAsistenciaDialog,
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const RegistrarAsistencias()));
+            },
           ),
         ],
       ),

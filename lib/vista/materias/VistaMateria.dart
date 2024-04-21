@@ -147,6 +147,7 @@ class _VistaMateriaState extends State<VistaMateria> {
 
   @override
   Widget build(BuildContext context) {
+    cargarLista();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gestión de Materias'),

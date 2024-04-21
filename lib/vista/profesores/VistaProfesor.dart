@@ -1,3 +1,4 @@
+import 'package:dam_u3_practica1_checador/vista/profesores/registrarProfesor.dart';
 import 'package:flutter/material.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
@@ -166,6 +167,7 @@ class _VistaProfesorState extends State<VistaProfesor> {
 
   @override
   Widget build(BuildContext context) {
+    cargarLista();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gestión de Profesores'),
@@ -173,7 +175,9 @@ class _VistaProfesorState extends State<VistaProfesor> {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: _showAddProfesorDialog,
+            onPressed: (){
+              Navigator.push(context, MaterialPageRoute(builder: (context) => const RegistrarProfesor()));
+            },
           ),
         ],
       ),
