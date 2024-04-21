@@ -9,7 +9,7 @@ class DBProfesor {
     final db = await Conexion.database;
 
     Profesor profe = await mostrarUno(profesor.nprofesor);
-    if (profe.nombre.isEmpty) {
+    if (profe.nombre.isEmpty!) {
       return 0;
     }
     return db.insert('PROFESOR', profesor.toJSON());
