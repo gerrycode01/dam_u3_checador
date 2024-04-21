@@ -29,7 +29,7 @@ class DBMaterias {
 
   static Future<int> actualizar(Materia materia) async {
     final db = await Conexion.database;
-    return db.update('MATERIA', materia.toJSON(),
+    return db.update('MATERIA', materia.toJSON2(),
         where: 'NMAT=?', whereArgs: [materia.nmat]);
   }
 

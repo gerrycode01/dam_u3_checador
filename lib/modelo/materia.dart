@@ -6,6 +6,12 @@ class Materia {
 
   Map<String, dynamic> toJSON() {
     return {
+      'nmat': nmat,
+      'descripcion': descripcion};
+  }
+
+  Map<String, dynamic> toJSON2() {
+    return {
       //'nmat': nmat,
       'descripcion': descripcion};
   }

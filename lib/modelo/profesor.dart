@@ -8,6 +8,14 @@ class Profesor {
 
   Map<String, dynamic> toJSON() {
     return {
+      'nprofesor': nprofesor,
+      'nombre': nombre,
+      'carrera': carrera
+    };
+  }
+
+  Map<String, dynamic> toJSON2() {
+    return {
       //'nprofesor': nprofesor,
       'nombre': nombre,
       'carrera': carrera
