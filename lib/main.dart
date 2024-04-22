@@ -1,3 +1,5 @@
+import 'package:dam_u3_practica1_checador/controlador/DB.dart';
+import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:dam_u3_practica1_checador/vista/asistencias/VistaAsistencia.dart';
 import 'package:dam_u3_practica1_checador/vista/horarios/VistaHorario.dart';
 import 'package:dam_u3_practica1_checador/vista/materias/VistaMateria.dart';
@@ -27,6 +29,17 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _currentIndex = 0;// Corrected variable name for consistency
+  final Color azulMarino = Colors.indigo.shade900;
+  final Color naranja = Colors.deepOrange;
+  final Color blanco = Colors.white;
+  final Color negro = Colors.black;
+  List<Profesor> profesores = [];
+  String? idProfesor;
+  String? idMateria;
+  String? selectedTime;
+  String? selectedEdificio;
+  String? selectedSalon;
+  final _fechaController = TextEditingController();
 
   // This function will be used to change the current index
   void _onItemTapped(int index) {
@@ -128,23 +141,214 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _dynamicContent() {
     switch (_currentIndex) {
       case 1:
-        return const Text('Horarios');
+        return Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: "Profesor",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(Icons.person, color: azulMarino),
+                        filled: true,
+                        fillColor: blanco,
+                      ),
+                      value: idProfesor,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          idProfesor = newValue;
+                        });
+                      },
+                      items: profesores.map<DropdownMenuItem<String>>((Profesor profesor) {
+                        return DropdownMenuItem<String>(
+                          value: profesor.nprofesor,
+                          child: Text(profesor.nombre),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Expanded(
+                    child: TextField(
+                      controller: _fechaController,
+                      decoration: InputDecoration(
+                        hintText: 'Fecha',
+                        prefixIcon: Icon(Icons.calendar_today, color: azulMarino),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        filled: true,
+                        fillColor: blanco,
+                      ),
+                      readOnly: true,
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (pickedDate != null) {
+                          _fechaController.text = pickedDate.toString().substring(0, 10); // Formatea la fecha como yyyy-mm-dd
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: blanco, backgroundColor: naranja,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                onPressed: () {
+                  // Agregar lógica para la acción de buscar aquí
+                },
+                child: const Text('Buscar'),
+              ),
+            ],
+          ),
+        );
       case 2:
-        return const Text('Profesores');
-      case 3:
-        return const Text('Asistencia');
+        return Padding(
+          padding: EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    flex: 5, // Esto da más espacio al dropdown en proporción al botón
+                    child: DropdownButtonFormField<String>(
+                      decoration: InputDecoration(
+                        labelText: "Profesor",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        prefixIcon: Icon(Icons.person, color: azulMarino),
+                        filled: true,
+                        fillColor: blanco,
+                      ),
+                      value: idProfesor,
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          idProfesor = newValue;
+                        });
+                      },
+                      items: profesores.map<DropdownMenuItem<String>>((Profesor profesor) {
+                        return DropdownMenuItem<String>(
+                          value: profesor.nprofesor,
+                          child: Text(profesor.nombre),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                  SizedBox(width: 10), // Espacio entre el dropdown y el botón
+                  ButtonTheme(
+                    minWidth: 64.0, // Ancho mínimo del botón
+                    height: 60.0, // Altura para igualar la del DropdownButtonFormField
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        foregroundColor: blanco, backgroundColor: naranja,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {
+                        // Añadir lógica de búsqueda aquí si es necesario
+                      },
+                      child: const Text('Buscar'),
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
+        );
       default:
-        return GridView.builder(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 10.0,
-            childAspectRatio: 1.0,
-          ),
-          itemCount: 10,
-          itemBuilder: (context, index) => Card(
-
-            child: Center(child: Text('Item $index')),
-          ),
+        return Padding(
+          padding: EdgeInsets.all(10),
+           child: (
+             Column(
+               children: [
+                 Row(
+                   children: [
+                     Expanded(
+                       child: DropdownButtonFormField<String>(
+                         decoration: InputDecoration(
+                           labelText: "Hora",
+                           border: OutlineInputBorder(
+                             borderRadius: BorderRadius.circular(10),
+                           ),
+                           prefixIcon: Icon(Icons.punch_clock, color: azulMarino),
+                           filled: true,
+                           fillColor: blanco,
+                         ),
+                         onChanged: (newValue) {
+                           setState(() {
+                             selectedTime = newValue;
+                           });
+                         },
+                         items: Conexion.horas.map<DropdownMenuItem<String>>((String value) {
+                           return DropdownMenuItem<String>(
+                             value: value,
+                             child: Text(value),
+                           );
+                         }).toList(),
+                       ),
+                     ),
+                     SizedBox(width: 10),
+                     Expanded(
+                       child: DropdownButtonFormField<String>(
+                         decoration: InputDecoration(
+                           labelText: "Edificio",
+                           border: OutlineInputBorder(
+                             borderRadius: BorderRadius.circular(10),
+                           ),
+                           prefixIcon: Icon(Icons.apartment, color: azulMarino),
+                           filled: true,
+                           fillColor: blanco,
+                         ),
+                         value: selectedEdificio,
+                         onChanged: (newValue) {
+                           setState(() {
+                             selectedEdificio = newValue;
+                           });
+                         },
+                         items: Conexion.edificiosYSalones.keys
+                             .map<DropdownMenuItem<String>>((String value) {
+                           return DropdownMenuItem<String>(
+                             value: value,
+                             child: Text(value),
+                           );
+                         }).toList(),
+                       ),
+                     ),
+                   ],
+                 ),
+                 SizedBox(height: 20),
+                 ElevatedButton(
+                   style: ElevatedButton.styleFrom(
+                     foregroundColor: blanco, backgroundColor: naranja,
+                     shape: RoundedRectangleBorder(
+                       borderRadius: BorderRadius.circular(10),
+                     ),
+                   ),
+                   onPressed: () {
+                     // Añadir lógica de búsqueda aquí si es necesario
+                   },
+                   child: const Text('Buscar'),
+                 ),
+               ],
+             )
+           ),
         );
     }
   }
