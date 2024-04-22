@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 
-
-
 class RegistrarProfesor extends StatefulWidget {
   const RegistrarProfesor({super.key});
 
@@ -11,13 +9,15 @@ class RegistrarProfesor extends StatefulWidget {
   State<RegistrarProfesor> createState() => _RegistrarProfesorState();
 }
 
+List<String> carreras = [
+  "ISC", "IGE", "IC", "IB", "IE", "ID", "IQ", "IM"
+];
+
 class _RegistrarProfesorState extends State<RegistrarProfesor> {
-
   List<Profesor> listaProfesor = [];
-
   final _numeroProfesor = TextEditingController();
   final _nombreController = TextEditingController();
-  final _carreraController = TextEditingController();
+  String? _carreraSeleccionada;
 
   @override
   void initState() {
@@ -25,13 +25,10 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
     cargarLista();
   }
 
-
   @override
-
   void dispose() {
     _numeroProfesor.dispose();
     _nombreController.dispose();
-    _carreraController.dispose();
     super.dispose();
   }
 
@@ -41,6 +38,7 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
       listaProfesor = l;
     });
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -56,27 +54,30 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
               hintText: 'Numero del Profesor',
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           TextField(
             controller: _nombreController,
             decoration: const InputDecoration(
               hintText: 'Nombre del Profesor',
             ),
           ),
-          const SizedBox(
-            height: 20,
+          const SizedBox(height: 20),
+          DropdownButton<String>(
+            value: _carreraSeleccionada,
+            hint: Text('Seleccione una carrera'),
+            onChanged: (String? newValue) {
+              setState(() {
+                _carreraSeleccionada = newValue;
+              });
+            },
+            items: carreras.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
           ),
-          TextField(
-            controller: _carreraController,
-            decoration: const InputDecoration(
-              hintText: 'Carrera',
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
           TextButton(
             child: const Text('Cancelar'),
             onPressed: () {
@@ -86,27 +87,33 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
           TextButton(
             child: const Text('Agregar'),
             onPressed: () {
-              Profesor p = Profesor(
-                nprofesor: _numeroProfesor.text,
-                nombre: _nombreController.text,
-                carrera: _carreraController.text,
-              );
-              DBProfesor.insertar(p).then((value) {
-                if (value == 0) {
-                  mensaje('INSERCION INCORRECTA', Colors.red);
-                  return;
-                }
-                mensaje("SE HA INSERTADO EL PROFESOR", Colors.green);
-                limpiarCampos();
-                cargarLista();
-              });
-              Navigator.pop(context);
+              if (_carreraSeleccionada == null) {
+                mensaje("Por favor, seleccione una carrera antes de agregar.", Colors.red);
+              } else {
+                Profesor p = Profesor(
+                  nprofesor: _numeroProfesor.text,
+                  nombre: _nombreController.text,
+                  carrera: _carreraSeleccionada!, // Forzamos que no sea null
+                );
+                DBProfesor.insertar(p).then((value) {
+                  if (value == 0) {
+                    mensaje('INSERCION INCORRECTA', Colors.red);
+                    return;
+                  }
+                  mensaje("SE HA INSERTADO EL PROFESOR", Colors.green);
+                  limpiarCampos();
+                  cargarLista();
+                });
+                Navigator.pop(context);
+              }
             },
           ),
+
         ],
       ),
     );
   }
+
   void mensaje(String s, Color color) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(s), backgroundColor: color));
@@ -115,6 +122,6 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
   void limpiarCampos() {
     _numeroProfesor.clear();
     _nombreController.clear();
-    _carreraController.clear();
+    _carreraSeleccionada = null; // Resetear la selección de la carrera
   }
 }

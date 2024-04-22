@@ -142,9 +142,6 @@ class _VistaMateriaState extends State<VistaMateria> {
       },
     );
   }
-
-
-
   @override
   Widget build(BuildContext context) {
     cargarLista();
@@ -198,11 +195,10 @@ class _VistaMateriaState extends State<VistaMateria> {
                               TextButton(
                                 child: const Text('Eliminar'),
                                 onPressed: () {
-                                  Navigator.of(context).pop(); // Cierra el diálogo
-                                  // Aquí se realiza la eliminación después de la confirmación
+                                  Navigator.of(context).pop();
                                   DBMaterias.eliminar(materias[index].nmat).then((value) {
                                     mensaje("SE HA ELIMINADO EL PROFESOR", Colors.red);
-                                    cargarLista(); // Refresca la lista después de eliminar
+                                    cargarLista();
                                   });
                                 },
                               ),

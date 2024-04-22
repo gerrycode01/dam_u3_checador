@@ -220,7 +220,6 @@ class _VistaProfesorState extends State<VistaProfesor> {
                                 child: const Text('Eliminar'),
                                 onPressed: () {
                                   Navigator.of(context).pop(); // Cierra el diálogo
-                                  // Aquí se realiza la eliminación después de la confirmación
                                   DBProfesor.eliminar(listaProfesor[index].nprofesor).then((value) {
                                     mensaje("SE HA ELIMINADO EL PROFESOR", Colors.red);
                                     cargarLista(); // Refresca la lista después de eliminar
