@@ -2,6 +2,7 @@ import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBMateria.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/horario.dart';
+import 'package:dam_u3_practica1_checador/modelo/horarioProfesorMateria.dart';
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:dam_u3_practica1_checador/vista/horarios/registrarHorarios.dart';
@@ -15,7 +16,7 @@ class Horarios extends StatefulWidget {
 }
 
 class _HorariosState extends State<Horarios> {
-  List<Horario> horarios = [];
+  List<HorarioProfesorMateria> horarios = [];
 
   @override
 
@@ -27,7 +28,7 @@ class _HorariosState extends State<Horarios> {
   }
 
   void cargarlista() async {
-    List<Horario> l = await DBHorario.mostrar();
+    List<HorarioProfesorMateria> l = await DBHorario.mostrarHorarioCompleto();
     setState(() {
       horarios = l;
     });
@@ -55,9 +56,9 @@ class _HorariosState extends State<Horarios> {
           return Card(
             margin: const EdgeInsets.all(8.0),
             child: ListTile(
-              title: Text(horarios[index].nprofesor),
+              title: Text(horarios[index].nombreProfesor),
               leading: CircleAvatar(child: Text("${horarios[index].nhorario}"),),
-              subtitle: Text(horarios[index].nmat),
+              subtitle: Text(horarios[index].descripcionMateria),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
