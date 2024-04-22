@@ -5,6 +5,7 @@ import 'package:dam_u3_practica1_checador/modelo/horario.dart';
 import 'package:dam_u3_practica1_checador/modelo/horarioProfesorMateria.dart';
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
+import 'package:dam_u3_practica1_checador/vista/horarios/editarHorario.dart';
 import 'package:dam_u3_practica1_checador/vista/horarios/registrarHorarios.dart';
 import 'package:flutter/material.dart';
 
@@ -65,7 +66,7 @@ class _HorariosState extends State<Horarios> {
                   IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () {
-
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => EditarHorario(nHorario: horarios[index].nhorario)));
                     },
                   ),
                   IconButton(

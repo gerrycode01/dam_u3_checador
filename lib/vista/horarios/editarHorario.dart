@@ -1,5 +1,7 @@
+import 'package:dam_u3_practica1_checador/controlador/DB.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBMateria.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
+import 'package:dam_u3_practica1_checador/modelo/horario.dart';
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:dam_u3_practica1_checador/vista/horarios/registrarHorarios.dart';
@@ -7,16 +9,26 @@ import 'package:flutter/material.dart';
 import 'package:dam_u3_practica1_checador/modelo/horarioProfesorMateria.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
 
-
 class EditarHorario extends StatefulWidget {
-  const EditarHorario({super.key});
+  const EditarHorario({super.key, required this.nHorario});
+
+  final int nHorario;
 
   @override
   State<EditarHorario> createState() => _EditarHorarioState();
 }
 
 class _EditarHorarioState extends State<EditarHorario> {
-  List<HorarioProfesorMateria> horarios = [];
+  HorarioProfesorMateria horario = HorarioProfesorMateria(
+      nhorario: 0,
+      nprofesor: '',
+      nombreProfesor: '',
+      nmat: '',
+      descripcionMateria: '',
+      hora: '',
+      edificio: '',
+      salon: ''
+  );
   List<Profesor> profesores = [];
   List<Materia> materias = [];
   String? idProfesor;
@@ -24,26 +36,31 @@ class _EditarHorarioState extends State<EditarHorario> {
   String? selectedTime;
   String? selectedEdificio;
   String? selectedSalon;
-  @override
 
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
     cargarlista();
   }
 
-
   void cargarlista() async {
-    List<HorarioProfesorMateria> l = await DBHorario.mostrarHorarioCompleto();
+    HorarioProfesorMateria l =
+        await DBHorario.mostrarHorarioCompletoSolo(widget.nHorario);
     List<Profesor> p = await DBProfesor.mostrar();
     List<Materia> ma = await DBMaterias.mostrar();
     setState(() {
-      horarios = l;
+      idProfesor = l.nprofesor;
+      idMateria = l.nmat;
+      selectedTime = l.hora;
+      selectedEdificio = l.edificio;
+      selectedSalon = l.salon;
+      horario = l;
       materias = ma;
       profesores = p;
-
     });
   }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -54,40 +71,46 @@ class _EditarHorarioState extends State<EditarHorario> {
         padding: const EdgeInsets.all(30),
         children: [
           DropdownButtonFormField(
-              hint: const Text("Selecciona un profesor"),
-              items: profesores.map((profesor) {
-                return DropdownMenuItem(
-                    value: profesor.nprofesor, child: Text(profesor.nombre));
-              }).toList(),
-              onChanged: (valor) {
-                setState(() {
-                  idProfesor = valor!;
-                });
-              }),
+            hint: const Text("Selecciona un profesor"),
+            value: idProfesor, // Asegúrate de que esta sea una variable que refleje el valor actual seleccionado y sea única
+            items: profesores.map((Profesor profesor) {
+              return DropdownMenuItem<String>(
+                value: profesor.nprofesor, // Este valor debe ser único para cada profesor
+                child: Text(profesor.nombre),
+              );
+            }).toList(),
+            onChanged: (String? newValue) {
+              setState(() {
+                idProfesor = newValue;
+              });
+            },
+          ),
           const SizedBox(height: 20),
           DropdownButtonFormField(
               hint: const Text("Selecciona una materia"),
+              value: horario.nmat,
               items: materias.map((e) {
                 return DropdownMenuItem(
                     value: e.nmat, child: Text(e.descripcion));
               }).toList(),
               onChanged: (valor) {
                 setState(() {
-                  idMateria = valor!;
+                  horario.nmat = valor!;
                 });
               }),
           const SizedBox(height: 20),
           DropdownButtonFormField<String>(
+            value: horario.hora,
             decoration: const InputDecoration(
               labelText: 'Selecciona una hora',
               border: OutlineInputBorder(),
             ),
             onChanged: (newValue) {
               setState(() {
-                selectedTime = newValue;
+                horario.hora = newValue!;
               });
             },
-            items: horas.map<DropdownMenuItem<String>>((String value) {
+            items: Conexion.horas.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -96,16 +119,16 @@ class _EditarHorarioState extends State<EditarHorario> {
           ),
           const SizedBox(height: 20),
           DropdownButtonFormField<String>(
-            value: selectedEdificio,
+            value: horario.edificio,
             hint: const Text("Selecciona un edificio"),
             onChanged: (newValue) {
               setState(() {
-                selectedEdificio = newValue;
+                horario.edificio = newValue!;
                 selectedSalon =
-                null; // Resetea el salón cuando cambia el edificio
+                    null; // Resetea el salón cuando cambia el edificio
               });
             },
-            items: edificiosYSalones.keys
+            items: Conexion.edificiosYSalones.keys
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -123,7 +146,7 @@ class _EditarHorarioState extends State<EditarHorario> {
                   selectedSalon = newValue;
                 });
               },
-              items: edificiosYSalones[selectedEdificio]!
+              items: Conexion.edificiosYSalones[selectedEdificio]!
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
@@ -169,8 +192,8 @@ class _EditarHorarioState extends State<EditarHorario> {
                   hora: selectedTime.toString(),
                   edificio: selectedEdificio.toString(),
                   salon: selectedSalon.toString());
-              DBHorario.insertar(horario).then((value){
-                if(value == 0){
+              DBHorario.insertar(horario).then((value) {
+                if (value == 0) {
                   mensaje('ERROR DE INSERSION', Colors.red);
                   return;
                 }
@@ -183,6 +206,7 @@ class _EditarHorarioState extends State<EditarHorario> {
       ),
     );
   }
+
   void mensaje(String s, Color color) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(s), backgroundColor: color));
