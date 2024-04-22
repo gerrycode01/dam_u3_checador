@@ -65,13 +65,39 @@ class _HorariosState extends State<Horarios> {
                   IconButton(
                     icon: const Icon(Icons.edit),
                     onPressed: () {
-                      // Acción para actualizar el horario
+
                     },
                   ),
                   IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
-                      // Acción para eliminar el horario
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Confirmar Eliminación'),
+                            content: const Text('¿Estás seguro de que quieres eliminar este profesor?'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('Cancelar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
+                                },
+                              ),
+                              TextButton(
+                                child: const Text('Eliminar'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  DBHorario.eliminar(horarios[index].nhorario).then((value) {
+                                    mensaje("SE HA ELIMINADO EL PROFESOR", Colors.red);
+                                    cargarlista();
+                                  });
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                   ),
                 ],
@@ -80,6 +106,12 @@ class _HorariosState extends State<Horarios> {
           );
         },
       ),
+    );
+  }
+  void mensaje(String s, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s),backgroundColor: color,
+        )
     );
   }
 }
