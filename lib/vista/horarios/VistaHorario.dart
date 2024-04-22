@@ -16,26 +16,8 @@ class Horarios extends StatefulWidget {
 
 class _HorariosState extends State<Horarios> {
   List<Horario> horarios = [];
-  List<Profesor> profesores = [];
-  List<Materia> materias = [];
-
-  final _profesorController = TextEditingController();
-  final _materiaController = TextEditingController();
-  final _horaController = TextEditingController();
-  final _edificioController = TextEditingController();
-  final _salonController = TextEditingController();
-  final List<String> _horarios = ['Horario 1', 'Horario 2', 'Horario 3'];
 
   @override
-
-  void dispose() {
-    _profesorController.dispose();
-    _materiaController.dispose();
-    _horaController.dispose();
-    _edificioController.dispose();
-    _salonController.dispose();
-    super.dispose();
-  }
 
   @override
   void initState() {
@@ -44,116 +26,16 @@ class _HorariosState extends State<Horarios> {
     cargarlista();
   }
 
-  void cargarProfesores() async {
-    List<Profesor> profesoresList = await DBProfesor.mostrar();
-    setState(() {
-      profesores = profesoresList;
-    });
-  }
-
-  void cargarMaterias() async {
-    List<Materia> materiasList = await DBMaterias.mostrar();
-    setState(() {
-      materias = materiasList;
-    });
-  }
-
   void cargarlista() async {
     List<Horario> l = await DBHorario.mostrar();
     setState(() {
       horarios = l;
     });
   }
-int profesorseleccionado = 0;
-  void _showAddHorarioDialog() {
-    // Clear all fields before showing the dialog
-    _profesorController.clear();
-    _materiaController.clear();
-    _horaController.clear();
-    _edificioController.clear();
-    _salonController.clear();
-
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        var idProfesor;
-        return ListView(
-          padding: EdgeInsets.all(30),
-          children: [
-            DropdownButtonFormField(
-              value: idProfesor,
-                items: profesores.map((e) {
-                  return DropdownMenuItem(
-                      value: e.nprofesor,
-                      child: Text(e.nombre)
-                  );
-                }).toList(),
-                onChanged: (valor){
-                setState(() {
-                  idProfesor = valor!;
-                });
-                }
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _materiaController,
-              decoration: const InputDecoration(
-                hintText: 'Materia',
-              ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _horaController,
-              decoration: const InputDecoration(
-                hintText: 'Hora',
-              ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _edificioController,
-              decoration: const InputDecoration(
-                hintText: 'Edificio',
-              ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _salonController,
-              decoration: const InputDecoration(
-                hintText: 'Salón',
-              ),
-            ),
-            SizedBox(height: 20),
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Agregar'),
-              onPressed: () {
-                // Horario nuevoHorario = Horario(
-                //   profesor: _profesorController.text,
-                //   materia: _materiaController.text,
-                //   hora: _horaController.text,
-                //   edificio: _edificioController.text,
-                //   salon: _salonController.text,
-                // );
-                // DBHorarios.insertar(nuevoHorario).then((value) {
-                //   mensaje("SE HA INSERTADO EL HORARIO", Colors.green);
-                //   cargarListaHorarios(); // Asegúrate de tener una función para recargar los horarios
-                // });
-                Navigator.of(context). pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
 
   Widget build(BuildContext context) {
+    cargarlista();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gestión de Horarios'),
@@ -168,12 +50,14 @@ int profesorseleccionado = 0;
         ],
       ),
       body: ListView.builder(
-        itemCount: _horarios.length,
+        itemCount: horarios.length,
         itemBuilder: (context, index) {
           return Card(
             margin: const EdgeInsets.all(8.0),
             child: ListTile(
-              title: Text(_horarios[index]),
+              title: Text(horarios[index].nprofesor),
+              leading: CircleAvatar(child: Text("${horarios[index].nhorario}"),),
+              subtitle: Text(horarios[index].nmat),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
