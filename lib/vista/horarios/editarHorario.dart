@@ -4,7 +4,6 @@ import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/horario.dart';
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
-import 'package:dam_u3_practica1_checador/vista/horarios/registrarHorarios.dart';
 import 'package:flutter/material.dart';
 import 'package:dam_u3_practica1_checador/modelo/horarioProfesorMateria.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
@@ -50,14 +49,19 @@ class _EditarHorarioState extends State<EditarHorario> {
     List<Profesor> p = await DBProfesor.mostrar();
     List<Materia> ma = await DBMaterias.mostrar();
     setState(() {
-      idProfesor = l.nprofesor;
-      idMateria = l.nmat;
-      selectedTime = l.hora;
-      selectedEdificio = l.edificio;
-      selectedSalon = l.salon;
       horario = l;
       materias = ma;
       profesores = p;
+      idProfesor = horario.nprofesor;
+      print('$idProfesor - ${horario.nombreProfesor}');
+      idMateria = horario.nmat;
+      print('$idMateria - ${horario.descripcionMateria}');
+      selectedTime = horario.hora;
+      print(selectedTime);
+      selectedEdificio = horario.edificio;
+      print(selectedEdificio);
+      selectedSalon = horario.salon;
+      print(selectedSalon);
     });
   }
 
@@ -88,26 +92,26 @@ class _EditarHorarioState extends State<EditarHorario> {
           const SizedBox(height: 20),
           DropdownButtonFormField(
               hint: const Text("Selecciona una materia"),
-              value: horario.nmat,
+              value: idMateria,
               items: materias.map((e) {
                 return DropdownMenuItem(
                     value: e.nmat, child: Text(e.descripcion));
               }).toList(),
               onChanged: (valor) {
                 setState(() {
-                  horario.nmat = valor!;
+                  idMateria = valor!;
                 });
               }),
           const SizedBox(height: 20),
           DropdownButtonFormField<String>(
-            value: horario.hora,
+            value: selectedTime,
             decoration: const InputDecoration(
               labelText: 'Selecciona una hora',
               border: OutlineInputBorder(),
             ),
             onChanged: (newValue) {
               setState(() {
-                horario.hora = newValue!;
+                selectedTime = newValue!;
               });
             },
             items: Conexion.horas.map<DropdownMenuItem<String>>((String value) {
@@ -119,13 +123,12 @@ class _EditarHorarioState extends State<EditarHorario> {
           ),
           const SizedBox(height: 20),
           DropdownButtonFormField<String>(
-            value: horario.edificio,
+            value: selectedEdificio,
             hint: const Text("Selecciona un edificio"),
             onChanged: (newValue) {
               setState(() {
-                horario.edificio = newValue!;
-                selectedSalon =
-                    null; // Resetea el salón cuando cambia el edificio
+                selectedEdificio = newValue!;
+                selectedSalon = null;
               });
             },
             items: Conexion.edificiosYSalones.keys
@@ -192,12 +195,12 @@ class _EditarHorarioState extends State<EditarHorario> {
                   hora: selectedTime.toString(),
                   edificio: selectedEdificio.toString(),
                   salon: selectedSalon.toString());
-              DBHorario.insertar(horario).then((value) {
+              DBHorario.actualizar(horario).then((value) {
                 if (value == 0) {
-                  mensaje('ERROR DE INSERSION', Colors.red);
+                  mensaje('ERROR DE ACTUALIZACION', Colors.red);
                   return;
                 }
-                mensaje('HORARIO AGREGADO', Colors.green);
+                mensaje('HORARIO ACTUALIZADO', Colors.green);
               });
               Navigator.of(context).pop();
             },
