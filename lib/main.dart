@@ -108,7 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
               leading: const Icon(Icons.check_circle),
               title: const Text('Asistencias', style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold,),),
               onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => const Asistencia()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const VistaAsistencia()));
               },
             ),
 
