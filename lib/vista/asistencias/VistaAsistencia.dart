@@ -33,6 +33,7 @@ class _VistaAsistenciaState extends State<VistaAsistencia> {
 
   @override
   Widget build(BuildContext context) {
+    cargarDatos();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gestión de Asistencia',style: TextStyle(color: Colors.white),),
