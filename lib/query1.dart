@@ -97,6 +97,14 @@ class _Query1State extends State<Query1> {
             },
             child: const Text('Buscar'),
           ),
+          Expanded(
+              child: ListView.builder(
+                  itemCount: profesores.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(profesores[index].nombre),
+                    );
+                  }))
         ],
       )),
     );
@@ -113,7 +121,6 @@ class _Query1State extends State<Query1> {
     }
     setState(() {
       this.profesores = profesores;
-      //AQUI ESCRIBES O ACTUALIZAS LO QUE TENGAS QUE ACTUALIZAR
     });
   }
 }

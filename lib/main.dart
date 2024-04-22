@@ -3,6 +3,7 @@ import 'package:dam_u3_practica1_checador/controlador/DB.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:dam_u3_practica1_checador/query2.dart';
+import 'package:dam_u3_practica1_checador/query3.dart';
 import 'package:dam_u3_practica1_checador/vista/asistencias/VistaAsistencia.dart';
 import 'package:dam_u3_practica1_checador/vista/horarios/VistaHorario.dart';
 import 'package:dam_u3_practica1_checador/vista/materias/VistaMateria.dart';
@@ -193,66 +194,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case 1:
         return Query2();
       case 2:
-        return Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    flex: 5,
-                    // Esto da más espacio al dropdown en proporción al botón
-                    child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                        labelText: "Profesor",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        prefixIcon: Icon(Icons.person, color: azulMarino),
-                        filled: true,
-                        fillColor: blanco,
-                      ),
-                      value: idProfesor,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          idProfesor = newValue;
-                        });
-                      },
-                      items: profesores
-                          .map<DropdownMenuItem<String>>((Profesor profesor) {
-                        return DropdownMenuItem<String>(
-                          value: profesor.nprofesor,
-                          child: Text(profesor.nombre),
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  // Espacio entre el dropdown y el botón
-                  ButtonTheme(
-                    minWidth: 64.0,
-                    // Ancho mínimo del botón
-                    height: 60.0,
-                    // Altura para igualar la del DropdownButtonFormField
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        foregroundColor: blanco,
-                        backgroundColor: naranja,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                      onPressed: () {
-                        // Añadir lógica de búsqueda aquí si es necesario
-                      },
-                      child: const Text('Buscar'),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-        );
+        return Query3();
       default:
         return const Query1();
     }
