@@ -2,6 +2,7 @@ import 'package:dam_u3_practica1_checador/controlador/DB.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBAsistencia.dart';
 import 'package:dam_u3_practica1_checador/modelo/asistencia.dart';
 import 'package:dam_u3_practica1_checador/modelo/horario.dart';
+import 'package:dam_u3_practica1_checador/modelo/horarioProfesorMateria.dart';
 
 class DBHorario {
   static Future<int> insertar(Horario horario) async {
@@ -86,5 +87,36 @@ class DBHorario {
 
     return await db
         .delete('HORARIO', where: 'NHORARIO=?', whereArgs: [nhorario]);
+  }
+
+  static Future<List<HorarioProfesorMateria>> mostrarHorarioCompleto() async {
+    final db = await Conexion.database;
+    String sql = '''
+      SELECT 
+      HORARIO.NHORARIO, 
+      HORARIO.NPROFESOR, 
+      PROFESOR.NOMBRE, 
+      HORARIO.NMAT,
+      MATERIA.DESCRIPCION,
+      HORARIO.HORA,
+      HORARIO.EDIFICIO,
+      HORARIO.SALON
+      FROM HORARIO
+      INNER JOIN PROFESOR ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR
+      INNER JOIN MATERIA ON MATERIA.NMAT = HORARIO.NMAT;
+    ''';
+    List<Map<String, dynamic>> horarioCompleto = await db.rawQuery(sql);
+
+    return List.generate(
+        horarioCompleto.length,
+        (index) => HorarioProfesorMateria(
+            nhorario: horarioCompleto[index]['NHORARIO'],
+            nprofesor: horarioCompleto[index]['NPROFESOR'],
+            nombreProfesor: horarioCompleto[index]['NOMBRE'],
+            nmat: horarioCompleto[index]['NMAT'],
+            descripcionMateria: horarioCompleto[index]['DESCRIPCION'],
+            hora: horarioCompleto[index]['HORA'],
+            edificio: horarioCompleto[index]['EDIFICIO'],
+            salon: horarioCompleto[index]['SALON']));
   }
 }
