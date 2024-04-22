@@ -53,4 +53,29 @@ class Conexion {
       );
     ''');
   }
+
+  static Map<String, List<String>> edificiosYSalones = {
+    'CB': ['CB1', 'CB2', 'CB3', 'CB4'],
+    'UVP': ['LCUVP1', 'LCUVP2', 'LCUVP3', 'MTI1'],
+    'LC': ['TDM', 'ACISCO', 'LCSG', 'LCSO'],
+    'UD': ['UD1', 'UD2', 'UD11', 'UD12'],
+  };
+
+  static List<String> horas = [
+    '07:00',
+    '08:00',
+    '09:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+    '16:00',
+    '17:00',
+    '18:00',
+    '19:00',
+    '20:00',
+    '21:00',
+  ];
 }

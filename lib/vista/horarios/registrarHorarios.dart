@@ -1,3 +1,4 @@
+import 'package:dam_u3_practica1_checador/controlador/DB.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBMateria.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
@@ -21,30 +22,6 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
   String? selectedTime;
   String? selectedEdificio;
   String? selectedSalon;
-
-  Map<String, List<String>> edificiosYSalones = {
-    'CB': ['CB1', 'CB2', 'CB3', 'CB4'],
-    'UVP': ['LCUVP1', 'LCUVP2', 'LCUVP3', 'MTI1'],
-    'LC': ['TDM', 'ACISCO', 'LCSG', 'LCSO'],
-    'UD': ['UD1', 'UD2', 'UD11', 'UD12'],
-  };
-  List<String> horas = [
-    '07:00',
-    '08:00',
-    '09:00',
-    '10:00',
-    '11:00',
-    '12:00',
-    '13:00',
-    '14:00',
-    '15:00',
-    '16:00',
-    '17:00',
-    '18:00',
-    '19:00',
-    '20:00',
-    '21:00',
-  ];
 
   @override
   void initState() {
@@ -112,7 +89,7 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
                 selectedTime = newValue;
               });
             },
-            items: horas.map<DropdownMenuItem<String>>((String value) {
+            items: Conexion.horas.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -130,7 +107,7 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
                 null; // Resetea el salón cuando cambia el edificio
               });
             },
-            items: edificiosYSalones.keys
+            items: Conexion.edificiosYSalones.keys
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -148,7 +125,7 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
                   selectedSalon = newValue;
                 });
               },
-              items: edificiosYSalones[selectedEdificio]!
+              items: Conexion.edificiosYSalones[selectedEdificio]!
                   .map<DropdownMenuItem<String>>((String value) {
                 return DropdownMenuItem<String>(
                   value: value,
