@@ -1,8 +1,6 @@
-
+import 'package:flutter/material.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBMateria.dart';
 import 'package:dam_u3_practica1_checador/vista/materias/registrarmateria.dart';
-import 'package:flutter/material.dart';
-
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
 
 class VistaMateria extends StatefulWidget {
@@ -19,7 +17,6 @@ class _VistaMateriaState extends State<VistaMateria> {
 
   @override
   void dispose() {
-    // Limpia los controladores cuando el Widget se descarte
     _codigoController.dispose();
     _descripcionController.dispose();
     super.dispose();
@@ -30,69 +27,64 @@ class _VistaMateriaState extends State<VistaMateria> {
     setState(() {
       materias = l;
     });
-    print("Materias cargadas: ${materias.length}"); // Esto imprimirá la cantidad de materias cargadas
   }
-
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     cargarLista();
   }
 
   void _showAddMateriaDialog() {
-    limpiarCampos(); // Asegúrate de que esta función limpia los controladores de texto
+    limpiarCampos();
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return ListView(
+        return SingleChildScrollView(
           padding: const EdgeInsets.all(30),
-          children: [
-            TextField(
-              controller: _codigoController,
-              decoration: const InputDecoration(
-                hintText: 'Código de la Materia',
+          child: Column(
+            children: [
+              TextField(
+                controller: _codigoController,
+                decoration: InputDecoration(
+                  labelText: 'Código de la Materia',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.code),
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextField(
-              controller: _descripcionController,
-              decoration: const InputDecoration(
-                hintText: 'Descripción de la Materia',
+              const SizedBox(height: 20),
+              TextField(
+                controller: _descripcionController,
+                decoration: InputDecoration(
+                  labelText: 'Descripción de la Materia',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.description),
+                ),
               ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Agregar'),
-              onPressed: () {
-                Materia m = Materia(
-                    nmat: _codigoController.text,
-                    descripcion: _descripcionController.text
-                );
-                DBMaterias.insertar(m).then((value) {
-                  mensaje("SE HA INSERTADO LA MATERIA", Colors.green);
-                  cargarLista();
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.add),
+                label: const Text('Agregar'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.deepOrange, // foreground (text color)
+                ),
+                onPressed: () {
+                  Materia m = Materia(
+                      nmat: _codigoController.text,
+                      descripcion: _descripcionController.text);
+                  DBMaterias.insertar(m).then((value) {
+                    mensaje("SE HA INSERTADO LA MATERIA", Colors.green);
+                    cargarLista();
+                  });
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         );
       },
     );
   }
-
 
   void _editarMateria(int index) {
     Materia m = materias[index];
@@ -102,56 +94,61 @@ class _VistaMateriaState extends State<VistaMateria> {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return ListView(
-          padding: EdgeInsets.all(30),
-          children: [
-            TextField(
-              controller: _codigoController,
-              decoration: const InputDecoration(
-                hintText: 'Código de la Materia',
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            children: [
+              TextField(
+                controller: _codigoController,
+                decoration: InputDecoration(
+                  labelText: 'Código de la Materia',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.code),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextField(
-              controller: _descripcionController,
-              decoration: const InputDecoration(
-                hintText: 'Descripción de la Materia',
+              const SizedBox(height: 20),
+              TextField(
+                controller: _descripcionController,
+                decoration: InputDecoration(
+                  labelText: 'Descripción de la Materia',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.description),
+                ),
               ),
-            ),
-            SizedBox(height: 20),
-            TextButton(
-              child: const Text('Cancelar'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: const Text('Actualizar'),
-              onPressed: () {
-                m.nmat = _codigoController.text;
-                m.descripcion = _descripcionController.text;
-                DBMaterias.actualizar(m).then((value) {
-                  mensaje("SE HA ACTUALIZADO LA MATERIA", Colors.blue);
-                  cargarLista();
-                });
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              const SizedBox(height: 20),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.update),
+                label: const Text('Actualizar'),
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white, backgroundColor: Colors.deepOrange, // foreground
+                ),
+                onPressed: () {
+                  m.nmat = _codigoController.text;
+                  m.descripcion = _descripcionController.text;
+                  DBMaterias.actualizar(m).then((value) {
+                    mensaje("SE HA ACTUALIZADO LA MATERIA", Colors.blue);
+                    cargarLista();
+                  });
+                  Navigator.pop(context);
+                },
+              ),
+            ],
+          ),
         );
       },
     );
   }
+
   @override
   Widget build(BuildContext context) {
     cargarLista();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gestión de Materias'),
-        backgroundColor: Colors.grey.shade500,
+        title: const Text('Gestión de Materias',style: TextStyle(color: Colors.white),),
+        backgroundColor: Colors.indigo.shade900,
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.add, color: Colors.deepOrange),
             onPressed: (){
               Navigator.push(context, MaterialPageRoute(builder: (context) => const RegistrarMateria()));
             },
@@ -159,56 +156,36 @@ class _VistaMateriaState extends State<VistaMateria> {
         ],
       ),
       body: ListView.builder(
-        itemCount: materias.length, // Asumiendo que tienes 10 materias por ahora
+        itemCount: materias.length,
         itemBuilder: (context, index) {
-          // Aquí iría tu código para generar la lista de materias
-          return Card(
-            margin: const EdgeInsets.all(8.0),
-            child: ListTile(
-              title: Text(materias[index].descripcion),
-              leading: CircleAvatar(child: Text(materias[index].nmat),),// Mostrar información de la materia aquí
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  IconButton(
-                    icon: const Icon(Icons.edit),
-                    onPressed: () {
-                      _editarMateria(index);
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Confirmar Eliminación'),
-                            content: const Text('¿Estás seguro de que quieres eliminar este profesor?'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('Cancelar'),
-                                onPressed: () {
-                                  Navigator.of(context).pop(); // Cierra el diálogo sin hacer nada
-                                },
-                              ),
-                              TextButton(
-                                child: const Text('Eliminar'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  DBMaterias.eliminar(materias[index].nmat).then((value) {
-                                    mensaje("SE HA ELIMINADO EL PROFESOR", Colors.red);
-                                    cargarLista();
-                                  });
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    },
-                  )
-                ],
+          return Dismissible(
+            key: Key(materias[index].nmat),
+            onDismissed: (direction) {
+              DBMaterias.eliminar(materias[index].nmat).then((value) {
+                mensaje("Materia eliminada correctamente", Colors.red);
+                cargarLista();
+              });
+            },
+            background: Container(color: Colors.red),
+            child: Card(
+              elevation: 5,
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              child: ListTile(
+                title: Text(materias[index].descripcion),
+                leading: CircleAvatar(
+                  backgroundColor: Colors.deepOrange,
+                  child: Text(materias[index].nmat, style: TextStyle(color: Colors.white)),
+                ),
+                trailing: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.deepOrange),
+                      onPressed: () => _editarMateria(index),
+                    ),
+
+                  ],
+                ),
               ),
             ),
           );
@@ -216,12 +193,11 @@ class _VistaMateriaState extends State<VistaMateria> {
       ),
     );
   }
+
   void mensaje(String s, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(s),backgroundColor: color,
-        )
-    );
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s), backgroundColor: color));
   }
+
   void limpiarCampos() {
     _codigoController.clear();
     _descripcionController.clear();

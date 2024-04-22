@@ -22,6 +22,10 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
   String? selectedTime;
   String? selectedEdificio;
   String? selectedSalon;
+  final Color azulMarino = Colors.indigo.shade900;
+  final Color naranja = Colors.deepOrange;
+  final Color blanco = Colors.white;
+  final Color negro = Colors.black;
 
   @override
   void initState() {
@@ -49,13 +53,22 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Registrar Horario"),
+        title: const Text("Registrar Horario",style: TextStyle(color: Colors.white),),
         centerTitle: true,
+        backgroundColor: azulMarino,
       ),
       body: ListView(
         padding: const EdgeInsets.all(30),
         children: [
           DropdownButtonFormField(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              prefixIcon: Icon(Icons.person, color: azulMarino),
+              filled: true,
+              fillColor: blanco,
+            ),
               hint: const Text("Selecciona un profesor"),
               items: profesores.map((profesor) {
                 return DropdownMenuItem(
@@ -68,6 +81,14 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
               }),
           const SizedBox(height: 20),
           DropdownButtonFormField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                prefixIcon: Icon(Icons.book, color: azulMarino),
+                filled: true,
+                fillColor: blanco,
+              ),
               hint: const Text("Selecciona una materia"),
               items: materias.map((e) {
                 return DropdownMenuItem(
@@ -80,10 +101,15 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
               }),
           const SizedBox(height: 20),
           DropdownButtonFormField<String>(
-            decoration: const InputDecoration(
-              labelText: 'Selecciona una hora',
-              border: OutlineInputBorder(),
-            ),
+          decoration: InputDecoration(
+          labelText: "Selecciona una hora",
+          border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          ),
+          prefixIcon: Icon(Icons.punch_clock, color: azulMarino),
+          filled: true,
+          fillColor: blanco,
+          ),
             onChanged: (newValue) {
               setState(() {
                 selectedTime = newValue;
@@ -91,6 +117,7 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
             },
             items: Conexion.horas.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
+
                 value: value,
                 child: Text(value),
               );
@@ -98,8 +125,16 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
           ),
           const SizedBox(height: 20),
           DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              labelText: "Selecciona un edificio",
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              prefixIcon: Icon(Icons.apartment, color: azulMarino),
+              filled: true,
+              fillColor: blanco,
+            ),
             value: selectedEdificio,
-            hint: const Text("Selecciona un edificio"),
             onChanged: (newValue) {
               setState(() {
                 selectedEdificio = newValue;
@@ -118,8 +153,16 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
           if (selectedEdificio != null) ...[
             const SizedBox(height: 20),
             DropdownButtonFormField<String>(
+              decoration: InputDecoration(
+                labelText: "Selecciona un salon",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                prefixIcon: Icon(Icons.class_outlined, color: azulMarino),
+                filled: true,
+                fillColor: blanco,
+              ),
               value: selectedSalon,
-              hint: const Text("Selecciona un salón"),
               onChanged: (newValue) {
                 setState(() {
                   selectedSalon = newValue;
@@ -135,13 +178,15 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
             ),
           ],
           const SizedBox(height: 20),
-          TextButton(
-            child: const Text('Cancelar'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
+
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: blanco, backgroundColor: naranja,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+              )
+              
+            ),
             child: const Text('Agregar'),
             onPressed: () {
               if (idProfesor == null) {
@@ -178,6 +223,18 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
                 }
                 mensaje('HORARIO AGREGADO', Colors.green);
               });
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: blanco, backgroundColor: azulMarino,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: const Text('Cancelar'),
+            onPressed: () {
               Navigator.of(context).pop();
             },
           ),

@@ -26,7 +26,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _currentIndex = 0; // Corrected variable name for consistency
+  int _currentIndex = 0;// Corrected variable name for consistency
 
   // This function will be used to change the current index
   void _onItemTapped(int index) {
@@ -40,7 +40,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'CHECADOR',
+          'CHECADOR TEC',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.grey.shade500,
+        backgroundColor: Colors.indigo.shade900,
       ),
       drawer: Drawer(
         child: ListView(
@@ -56,7 +56,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: [
             const DrawerHeader(
               decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                image: DecorationImage(
+                  image: AssetImage('assets/fondo.jpeg'), // Asegúrate de cambiar esto por el path de tu imagen.
+                  fit: BoxFit.cover,
+                ),
               ),
               child: Text(
                 'Menú',
@@ -66,30 +69,31 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
+
             ListTile(
               leading: const Icon(Icons.person),
-              title: const Text('Profesores'),
+              title: const Text('Profesores', style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold,),),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const VistaProfesor()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.book),
-              title: const Text('Materias'),
+              title: const Text('Materias', style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold,),),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const VistaMateria()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.schedule),
-              title: const Text('Horarios'),
+              title: const Text('Horarios', style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold,),),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const Horarios()));
               },
             ),
             ListTile(
               leading: const Icon(Icons.check_circle),
-              title: const Text('Asistencias'),
+              title: const Text('Asistencias', style: TextStyle(color: Colors.deepOrange,fontWeight: FontWeight.bold,),),
               onTap: () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const Asistencia()));
               },
@@ -115,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         currentIndex: _currentIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.deepOrange,
         onTap: _onItemTapped,
       ),
     );

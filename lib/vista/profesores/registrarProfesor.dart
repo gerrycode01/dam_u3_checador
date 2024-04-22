@@ -19,6 +19,12 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
   final _nombreController = TextEditingController();
   String? _carreraSeleccionada;
 
+  // Definiendo la paleta de colores
+  final Color azulMarino = Colors.indigo.shade900;
+  final Color naranja = Colors.deepOrange;
+  final Color blanco = Colors.white;
+  final Color negro = Colors.black;
+
   @override
   void initState() {
     super.initState();
@@ -42,29 +48,54 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Registrar Profesor"),
+        title: Text("Registrar Profesor", style: TextStyle(color: blanco),),
         centerTitle: true,
+        backgroundColor: azulMarino,
       ),
       body: ListView(
         padding: const EdgeInsets.all(30),
         children: [
           TextField(
             controller: _numeroProfesor,
-            decoration: const InputDecoration(
-              hintText: 'Numero del Profesor',
+            decoration: InputDecoration(
+              hintText: 'Número del Profesor',
+              hintStyle: TextStyle(color: negro.withOpacity(0.6)),
+              filled: true,
+              fillColor: blanco,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              prefixIcon: Icon(Icons.confirmation_number, color: azulMarino),
             ),
           ),
           const SizedBox(height: 20),
           TextField(
             controller: _nombreController,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText: 'Nombre del Profesor',
+              hintStyle: TextStyle(color: negro.withOpacity(0.6)),
+              filled: true,
+              fillColor: blanco,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide.none,
+              ),
+              prefixIcon: Icon(Icons.person, color: azulMarino),
             ),
           ),
           const SizedBox(height: 20),
-          DropdownButton<String>(
+          DropdownButtonFormField<String>(
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              filled: true,
+              fillColor: blanco,
+              prefixIcon: Icon(Icons.school, color: azulMarino),
+            ),
             value: _carreraSeleccionada,
-            hint: Text('Seleccione una carrera'),
+            hint: Text('Seleccione una carrera', style: TextStyle(color: negro.withOpacity(0.6))),
             onChanged: (String? newValue) {
               setState(() {
                 _carreraSeleccionada = newValue;
@@ -73,23 +104,22 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
             items: carreras.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
-                child: Text(value),
+                child: Text(value, style: TextStyle(color: negro)),
               );
             }).toList(),
           ),
           const SizedBox(height: 20),
-          TextButton(
-            child: const Text('Cancelar'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          TextButton(
-            child: const Text('Agregar'),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              foregroundColor: blanco, backgroundColor: naranja,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
             onPressed: () {
               if (_carreraSeleccionada == null) {
                 mensaje("Por favor, seleccione una carrera antes de agregar.", Colors.red);
-              } else {
+              }else {
                 Profesor p = Profesor(
                   nprofesor: _numeroProfesor.text,
                   nombre: _nombreController.text,
@@ -107,21 +137,33 @@ class _RegistrarProfesorState extends State<RegistrarProfesor> {
                 Navigator.pop(context);
               }
             },
+            child: const Text('Agregar'),
           ),
-
+          const SizedBox(height: 10),
+          TextButton(
+            style: TextButton.styleFrom(
+              foregroundColor: blanco, backgroundColor: azulMarino, // Color de fondo
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancelar'),
+          ),
         ],
       ),
     );
   }
 
   void mensaje(String s, Color color) {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text(s), backgroundColor: color));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s), backgroundColor: color));
   }
 
   void limpiarCampos() {
     _numeroProfesor.clear();
     _nombreController.clear();
-    _carreraSeleccionada = null; // Resetear la selección de la carrera
+    _carreraSeleccionada = null;
   }
 }
