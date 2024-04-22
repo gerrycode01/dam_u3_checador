@@ -81,6 +81,7 @@ class _Query2State extends State<Query2> {
                   itemCount: profesores.length,
                   itemBuilder: (context, index) {
                     return Card(
+                      elevation: 5,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[

@@ -110,6 +110,7 @@ class _Query1State extends State<Query1> {
               itemCount: profesores.length,
               itemBuilder: (context, index) {
                 return Card(
+                  elevation: 5,
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[

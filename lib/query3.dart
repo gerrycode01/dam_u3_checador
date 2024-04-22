@@ -105,6 +105,7 @@ class _Query3State extends State<Query3> {
                   itemCount: materias.length,
                   itemBuilder: (context, index) {
                     return Card(
+                      elevation: 5,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
