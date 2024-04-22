@@ -5,16 +5,14 @@ import 'package:dam_u3_practica1_checador/modelo/horarioProfesorMateria.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-class RegistrarAsistencias extends StatefulWidget {
-  const RegistrarAsistencias({super.key, required this.nhorario});
-
+class EditarAsistencia extends StatefulWidget {
+  const EditarAsistencia({super.key, required this.nhorario});
   final int nhorario;
-
   @override
-  State<RegistrarAsistencias> createState() => _RegistrarAsistenciasState();
+  State<EditarAsistencia> createState() => _EditarAsistenciaState();
 }
 
-class _RegistrarAsistenciasState extends State<RegistrarAsistencias> {
+class _EditarAsistenciaState extends State<EditarAsistencia> {
   HorarioProfesorMateria hpm = HorarioProfesorMateria(
       nhorario: 0,
       nprofesor: '',
@@ -27,9 +25,8 @@ class _RegistrarAsistenciasState extends State<RegistrarAsistencias> {
   String profesor = '';
   DateTime now = DateTime.now();
   String formattedDate = '';
-
-  @override
   void initState() {
+
     // TODO: implement initState
     super.initState();
     cargarDatos();
@@ -37,7 +34,7 @@ class _RegistrarAsistenciasState extends State<RegistrarAsistencias> {
 
   void cargarDatos() async {
     HorarioProfesorMateria hpm =
-        await DBHorario.mostrarHorarioCompletoSolo(widget.nhorario);
+    await DBHorario.mostrarHorarioCompletoSolo(widget.nhorario);
 
     setState(() {
       this.hpm = hpm;
@@ -46,6 +43,7 @@ class _RegistrarAsistenciasState extends State<RegistrarAsistencias> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -142,9 +140,7 @@ class _RegistrarAsistenciasState extends State<RegistrarAsistencias> {
         ),
       ),
     );
-
   }
-
   void mensaje(String s, Color color) {
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(s), backgroundColor: color));
