@@ -107,6 +107,20 @@ class DBHorario {
     ''';
     List<Map<String, dynamic>> horarioCompleto = await db.rawQuery(sql);
 
+    if (horarioCompleto.isEmpty) {
+      return List.generate(
+          0,
+          (index) => HorarioProfesorMateria(
+              nhorario: 0,
+              nprofesor: '',
+              nombreProfesor: '',
+              nmat: '',
+              descripcionMateria: '',
+              hora: '',
+              edificio: '',
+              salon: ''));
+    }
+
     return List.generate(
         horarioCompleto.length,
         (index) => HorarioProfesorMateria(
