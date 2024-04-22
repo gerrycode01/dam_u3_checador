@@ -134,7 +134,7 @@ class DBHorario {
             salon: horarioCompleto[index]['SALON']));
   }
 
-  static Future<List<HorarioProfesorMateria>> mostrarHorarioCompletoSolo(int nhorario) async {
+  static Future<HorarioProfesorMateria> mostrarHorarioCompletoSolo(int nhorario) async {
     final db = await Conexion.database;
     String sql = '''
       SELECT 
@@ -154,9 +154,7 @@ class DBHorario {
     List<Map<String, dynamic>> horarioCompleto = await db.rawQuery(sql,[nhorario]);
 
     if (horarioCompleto.isEmpty) {
-      return List.generate(
-          0,
-              (index) => HorarioProfesorMateria(
+      return HorarioProfesorMateria(
               nhorario: 0,
               nprofesor: '',
               nombreProfesor: '',
@@ -164,19 +162,17 @@ class DBHorario {
               descripcionMateria: '',
               hora: '',
               edificio: '',
-              salon: ''));
+              salon: '');
     }
 
-    return List.generate(
-        horarioCompleto.length,
-            (index) => HorarioProfesorMateria(
-            nhorario: horarioCompleto[index]['NHORARIO'],
-            nprofesor: horarioCompleto[index]['NPROFESOR'],
-            nombreProfesor: horarioCompleto[index]['NOMBRE'],
-            nmat: horarioCompleto[index]['NMAT'],
-            descripcionMateria: horarioCompleto[index]['DESCRIPCION'],
-            hora: horarioCompleto[index]['HORA'],
-            edificio: horarioCompleto[index]['EDIFICIO'],
-            salon: horarioCompleto[index]['SALON']));
+    return HorarioProfesorMateria(
+            nhorario: horarioCompleto[0]['NHORARIO'],
+            nprofesor: horarioCompleto[0]['NPROFESOR'],
+            nombreProfesor: horarioCompleto[0]['NOMBRE'],
+            nmat: horarioCompleto[0]['NMAT'],
+            descripcionMateria: horarioCompleto[0]['DESCRIPCION'],
+            hora: horarioCompleto[0]['HORA'],
+            edificio: horarioCompleto[0]['EDIFICIO'],
+            salon: horarioCompleto[0]['SALON']);
   }
 }
