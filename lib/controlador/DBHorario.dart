@@ -10,7 +10,7 @@ class DBHorario {
     return db.insert('HORARIO', horario.toJSON());
   }
 
-  static Future<List<Horario>> mostrar() async {
+  /*static Future<List<Horario>> mostrar() async {
     final db = await Conexion.database;
     List<Map<String, dynamic>> horarios = await db.query('HORARIO');
     return List.generate(
@@ -22,7 +22,7 @@ class DBHorario {
             hora: horarios[index]['HORA'],
             edificio: horarios[index]['EDIFICIO'],
             salon: horarios[index]['SALON']));
-  }
+  }*/
 
   static Future<Horario> mostrarUno(int nhorario) async {
     final db = await Conexion.database;
@@ -124,6 +124,52 @@ class DBHorario {
     return List.generate(
         horarioCompleto.length,
         (index) => HorarioProfesorMateria(
+            nhorario: horarioCompleto[index]['NHORARIO'],
+            nprofesor: horarioCompleto[index]['NPROFESOR'],
+            nombreProfesor: horarioCompleto[index]['NOMBRE'],
+            nmat: horarioCompleto[index]['NMAT'],
+            descripcionMateria: horarioCompleto[index]['DESCRIPCION'],
+            hora: horarioCompleto[index]['HORA'],
+            edificio: horarioCompleto[index]['EDIFICIO'],
+            salon: horarioCompleto[index]['SALON']));
+  }
+
+  static Future<List<HorarioProfesorMateria>> mostrarHorarioCompletoSolo(int nhorario) async {
+    final db = await Conexion.database;
+    String sql = '''
+      SELECT 
+      HORARIO.NHORARIO, 
+      HORARIO.NPROFESOR, 
+      PROFESOR.NOMBRE, 
+      HORARIO.NMAT,
+      MATERIA.DESCRIPCION,
+      HORARIO.HORA,
+      HORARIO.EDIFICIO,
+      HORARIO.SALON
+      FROM HORARIO
+      INNER JOIN PROFESOR ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR
+      INNER JOIN MATERIA ON MATERIA.NMAT = HORARIO.NMAT
+      WHERE HORARIO.NHORARIO = ? ;
+    ''';
+    List<Map<String, dynamic>> horarioCompleto = await db.rawQuery(sql,[nhorario]);
+
+    if (horarioCompleto.isEmpty) {
+      return List.generate(
+          0,
+              (index) => HorarioProfesorMateria(
+              nhorario: 0,
+              nprofesor: '',
+              nombreProfesor: '',
+              nmat: '',
+              descripcionMateria: '',
+              hora: '',
+              edificio: '',
+              salon: ''));
+    }
+
+    return List.generate(
+        horarioCompleto.length,
+            (index) => HorarioProfesorMateria(
             nhorario: horarioCompleto[index]['NHORARIO'],
             nprofesor: horarioCompleto[index]['NPROFESOR'],
             nombreProfesor: horarioCompleto[index]['NOMBRE'],
