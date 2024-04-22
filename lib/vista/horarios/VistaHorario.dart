@@ -1,3 +1,4 @@
+import 'package:dam_u3_practica1_checador/vista/asistencias/registrarAsistencia.dart';
 import 'package:flutter/material.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
 import 'package:dam_u3_practica1_checador/modelo/horarioProfesorMateria.dart';
@@ -31,13 +32,19 @@ class _HorariosState extends State<Horarios> {
     cargarLista();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gestión de Horarios',style: TextStyle(color: Colors.white),),
+        title: const Text(
+          'Gestión de Horarios',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.indigo.shade900,
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.add, color: Colors.deepOrange),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => const RegistrarHorarios()));
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const RegistrarHorarios()));
             },
           ),
         ],
@@ -49,19 +56,32 @@ class _HorariosState extends State<Horarios> {
             elevation: 5,
             margin: const EdgeInsets.all(8.0),
             child: ListTile(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => RegistrarAsistencias(
+                            nhorario: horarios[index].nhorario)));
+              },
               title: Text(horarios[index].nombreProfesor),
               leading: CircleAvatar(
                 backgroundColor: Colors.deepOrange,
-                child: Text("${horarios[index].nhorario}", style: TextStyle(color: Colors.white)),
+                child: Text("${horarios[index].nhorario}",
+                    style: TextStyle(color: Colors.white)),
               ),
-              subtitle: Text("${horarios[index].descripcionMateria} - ${horarios[index].hora} - ${horarios[index].edificio}-${horarios[index].salon}"),
+              subtitle: Text(
+                  "${horarios[index].descripcionMateria} - ${horarios[index].hora} - ${horarios[index].edificio}-${horarios[index].salon}"),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   IconButton(
                     icon: const Icon(Icons.edit, color: Colors.deepOrange),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => EditarHorario(nHorario: horarios[index].nhorario)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => EditarHorario(
+                                  nHorario: horarios[index].nhorario)));
                     },
                   ),
                   IconButton(
@@ -72,7 +92,8 @@ class _HorariosState extends State<Horarios> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title: const Text('Confirmar Eliminación'),
-                            content: const Text('¿Estás seguro de que quieres eliminar este horario?'),
+                            content: const Text(
+                                '¿Estás seguro de que quieres eliminar este horario?'),
                             actions: <Widget>[
                               TextButton(
                                 child: const Text('Cancelar'),
@@ -81,12 +102,15 @@ class _HorariosState extends State<Horarios> {
                               TextButton(
                                 child: const Text('Eliminar'),
                                 style: TextButton.styleFrom(
-                                  foregroundColor: Colors.white, backgroundColor: Colors.red,
+                                  foregroundColor: Colors.white,
+                                  backgroundColor: Colors.red,
                                 ),
                                 onPressed: () {
                                   Navigator.of(context).pop();
-                                  DBHorario.eliminar(horarios[index].nhorario).then((value) {
-                                    mensaje("Horario eliminado correctamente", Colors.red);
+                                  DBHorario.eliminar(horarios[index].nhorario)
+                                      .then((value) {
+                                    mensaje("Horario eliminado correctamente",
+                                        Colors.red);
                                     cargarLista();
                                   });
                                 },
@@ -107,6 +131,7 @@ class _HorariosState extends State<Horarios> {
   }
 
   void mensaje(String s, Color color) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(s), backgroundColor: color));
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(s), backgroundColor: color));
   }
 }

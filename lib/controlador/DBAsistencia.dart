@@ -1,5 +1,6 @@
 import 'package:dam_u3_practica1_checador/controlador/DB.dart';
 import 'package:dam_u3_practica1_checador/modelo/asistencia.dart';
+import 'package:dam_u3_practica1_checador/modelo/todo.dart';
 
 class DBAsistencia {
   static Future<int> insertar(Asistencia asistencia) async {
@@ -16,7 +17,7 @@ class DBAsistencia {
             idasistencia: asistencias[index]['IDASISTENCIA'],
             nhorario: asistencias[index]['NHORARIO'],
             fecha: asistencias[index]['FECHA'],
-            asistencia: asistencias[index]['ASISTENCIA']));
+            asistencia: asistencias[index]['ASISTENCIA'] == 1));
   }
 
   static Future<Asistencia> mostrarUno(int idasistencia) async {
@@ -53,5 +54,61 @@ class DBAsistencia {
     final db = await Conexion.database;
     return db.delete('ASISTENCIA',
         where: 'IDASISTENCIA=?', whereArgs: [idasistencia]);
+  }
+
+  static Future<List<Todo>> todo() async {
+    final db = await Conexion.database;
+    String sql = '''
+      SELECT 
+      HORARIO.NHORARIO, 
+      HORARIO.NPROFESOR, 
+      PROFESOR.NOMBRE, 
+      HORARIO.NMAT,
+      MATERIA.DESCRIPCION,
+      HORARIO.HORA,
+      HORARIO.EDIFICIO,
+      HORARIO.SALON,
+      ASISTENCIA.IDASISTENCIA,
+      ASISTENCIA.FECHA,
+      ASISTENCIA.ASISTENCIA
+      FROM HORARIO
+      INNER JOIN PROFESOR ON PROFESOR.NPROFESOR = HORARIO.NPROFESOR
+      INNER JOIN MATERIA ON MATERIA.NMAT = HORARIO.NMAT
+      INNER JOIN ASISTENCIA ON ASISTENCIA.NHORARIO = HORARIO.NHORARIO;
+    ''';
+    List<Map<String, dynamic>> horarioCompleto = await db.rawQuery(sql);
+
+    if (horarioCompleto.isEmpty) {
+      return List.generate(
+          0,
+              (index) => Todo(
+              nhorario: 0,
+              nprofesor: '',
+              nombreProfesor: '',
+              nmat: '',
+              descripcionMateria: '',
+              hora: '',
+              edificio: '',
+              salon: '',
+              idasistencia: 0,
+              fecha: '',
+              asistencia: false));
+    }
+
+    return List.generate(
+        horarioCompleto.length,
+            (index) => Todo(
+            nhorario: horarioCompleto[index]['NHORARIO'],
+            nprofesor: horarioCompleto[index]['NPROFESOR'],
+            nombreProfesor: horarioCompleto[index]['NOMBRE'],
+            nmat: horarioCompleto[index]['NMAT'],
+            descripcionMateria: horarioCompleto[index]['DESCRIPCION'],
+            hora: horarioCompleto[index]['HORA'],
+            edificio: horarioCompleto[index]['EDIFICIO'],
+            salon: horarioCompleto[index]['SALON'],
+            idasistencia: horarioCompleto[index]['IDASISTENCIA'],
+            fecha: horarioCompleto[index]['FECHA'],
+            asistencia: horarioCompleto[index]['ASISTENCIA'] == 1
+            ));
   }
 }

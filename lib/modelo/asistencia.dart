@@ -1,6 +1,6 @@
 class Asistencia {
-  int idasistencia;
-  int nhorario;
+  int idasistencia; //llave primaria autoincrementable
+  int nhorario; //llave foranea
   String fecha;
   bool asistencia;
 
@@ -11,12 +11,12 @@ class Asistencia {
     required this.asistencia
   });
 
-  Map<String, dynamic> toJSON(){
+  Map<String, dynamic> toJSON() {
     return {
-      //'idasistencia':idasistencia,
-      'nhorario':nhorario,
-      'fecha':fecha,
-      'asistencia':asistencia
+      //'idasistencia': idasistencia,
+      'nhorario': nhorario,
+      'fecha': fecha,
+      'asistencia': asistencia ? 1 : 0  // Almacena como 1 o 0
     };
   }
 }
