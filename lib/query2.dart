@@ -24,12 +24,12 @@ class _Query2State extends State<Query2> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          Text("ASISTENCIA DE PROFESORES", style: TextStyle(
+          const Text("ASISTENCIA DE PROFESORES", style: TextStyle(
             color: Colors.deepOrange,
             fontWeight: FontWeight.bold,
             fontSize: 20,
           ),),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           Row(
             children: [
               Expanded(
@@ -75,7 +75,7 @@ class _Query2State extends State<Query2> {
             },
             child: const Text('Buscar'),
           ),
-          SizedBox(height: 20,),
+          const SizedBox(height: 20,),
           Expanded(
               child: ListView.builder(
                   itemCount: profesores.length,
@@ -85,8 +85,8 @@ class _Query2State extends State<Query2> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           ListTile(
-                            leading: Icon(Icons.person, color: Colors.indigo,),
-                            title: Text(profesores[index].nombre,style: TextStyle(color: Colors.deepOrange),),
+                            leading: const Icon(Icons.person, color: Colors.indigo,),
+                            title: Text(profesores[index].nombre,style: const TextStyle(color: Colors.deepOrange),),
                           )
                         ],
                       ),
@@ -103,10 +103,6 @@ class _Query2State extends State<Query2> {
   void cargarProfesores() async {
     if (_fechaController.text.isEmpty) return;
     List<Profesor> profesores = await DBProfesor.query2(_fechaController.text);
-
-    for (var element in profesores) {
-      print(element.nombre);
-    }
 
     setState(() {
       this.profesores = profesores;
