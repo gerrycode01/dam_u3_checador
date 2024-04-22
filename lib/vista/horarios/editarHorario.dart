@@ -168,43 +168,49 @@ class _EditarHorarioState extends State<EditarHorario> {
           TextButton(
             child: const Text('Actualizar'),
             onPressed: () {
-              if (idProfesor == null) {
+              if (idProfesor == null || idProfesor!.isEmpty) {
                 mensaje('SELECCIONA UN PROFESOR', Colors.red);
                 return;
               }
-              if (idMateria == null) {
+              if (idMateria == null || idMateria!.isEmpty) {
                 mensaje('SELECCIONA UNA MATERIA', Colors.red);
                 return;
               }
-              if (selectedTime == null) {
+              if (selectedTime == null || selectedTime!.isEmpty) {
                 mensaje('SELECCIONA UNA HORA', Colors.red);
                 return;
               }
-              if (selectedEdificio == null) {
+              if (selectedEdificio == null || selectedEdificio!.isEmpty) {
                 mensaje('SELECCIONA UN EDIFICIO', Colors.red);
                 return;
               }
-              if (selectedSalon == null) {
+              if (selectedSalon == null || selectedSalon!.isEmpty) {
                 mensaje('SELECCIONA UN SALON', Colors.red);
                 return;
               }
+
+              // Aquí asegúrate de que estás utilizando el ID correcto del horario a actualizar.
               Horario horario = Horario(
-                  nhorario: 0,
-                  nprofesor: idProfesor.toString(),
-                  nmat: idMateria.toString(),
-                  hora: selectedTime.toString(),
-                  edificio: selectedEdificio.toString(),
-                  salon: selectedSalon.toString());
+                nhorario: widget.nHorario, // Usa el nHorario de la instancia del widget
+                nprofesor: idProfesor!,
+                nmat: idMateria!,
+                hora: selectedTime!,
+                edificio: selectedEdificio!,
+                salon: selectedSalon!,
+              );
+
               DBHorario.actualizar(horario).then((value) {
                 if (value == 0) {
                   mensaje('ERROR DE ACTUALIZACION', Colors.red);
-                  return;
+                } else {
+                  mensaje('HORARIO ACTUALIZADO', Colors.green);
+                  // Opcional: Recargar la página o volver a la vista anterior.
                 }
-                mensaje('HORARIO ACTUALIZADO', Colors.green);
               });
-              Navigator.of(context).pop();
+              Navigator.pop(context);
             },
           ),
+
         ],
       ),
     );

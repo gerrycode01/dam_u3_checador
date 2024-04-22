@@ -59,7 +59,18 @@ class _HorariosState extends State<Horarios> {
             child: ListTile(
               title: Text(horarios[index].nombreProfesor),
               leading: CircleAvatar(child: Text("${horarios[index].nhorario}"),),
-              subtitle: Text(horarios[index].descripcionMateria),
+              subtitle: Row(
+                children: [
+                  Text(horarios[index].descripcionMateria),
+                  SizedBox(width: 5,),
+                  Text(horarios[index].hora),
+                  SizedBox(width: 5,),
+                  Text(horarios[index].edificio),
+                  Text("-"),
+                  Text(horarios[index].salon)
+                ],
+              ),
+
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[

@@ -69,9 +69,20 @@ class DBHorario {
 
   static Future<int> actualizar(Horario horario) async {
     final db = await Conexion.database;
-    return db.update('HORARIO', horario.toJSON(),
-        where: 'NHORARIO=?', whereArgs: [horario.nhorario]);
+    try {
+      int resultado = await db.update(
+        'HORARIO',
+        horario.toJSON(),
+        where: 'NHORARIO = ?',
+        whereArgs: [horario.nhorario],
+      );
+      return resultado; // Retorna el número de filas afectadas
+    } catch (e) {
+      print('Error al actualizar el horario: $e');
+      return 0; // Retorna 0 si hubo un error
+    }
   }
+
 
   static Future<int> eliminar(int nhorario) async {
     final db = await Conexion.database;
