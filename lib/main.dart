@@ -1,4 +1,5 @@
 import 'package:dam_u3_practica1_checador/controlador/DB.dart';
+import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:dam_u3_practica1_checador/vista/asistencias/VistaAsistencia.dart';
 import 'package:dam_u3_practica1_checador/vista/horarios/VistaHorario.dart';
@@ -45,6 +46,18 @@ class _MyHomePageState extends State<MyHomePage> {
   void _onItemTapped(int index) {
     setState(() {
       _currentIndex = index;
+    });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cargarLista();
+  }
+  void cargarLista() async {
+    List<Profesor> l = await DBProfesor.mostrar();
+    setState(() {
+      profesores = l;
     });
   }
 
