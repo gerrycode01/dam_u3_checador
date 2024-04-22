@@ -1,5 +1,7 @@
+import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBMateria.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
+import 'package:dam_u3_practica1_checador/modelo/horario.dart';
 import 'package:dam_u3_practica1_checador/modelo/materia.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:flutter/material.dart';
@@ -11,20 +13,14 @@ class RegistrarHorarios extends StatefulWidget {
   State<RegistrarHorarios> createState() => _RegistrarHorariosState();
 }
 
-List<String> generateTimes() {
-  List<String> times = [];
-  for (int i = 7; i <= 21; i++) {
-    String hour = i.toString().padLeft(2, '0');  // Asegura el formato de dos dígitos
-    times.add("$hour:00");
-  }
-  return times;
-}
 class _RegistrarHorariosState extends State<RegistrarHorarios> {
   List<Profesor> profesores = [];
   List<Materia> materias = [];
-  final _horaController = TextEditingController();
-  var idProfesor;
-  var idMateria;
+  String? idProfesor;
+  String? idMateria;
+  String? selectedTime;
+  String? selectedEdificio;
+  String? selectedSalon;
 
   Map<String, List<String>> edificiosYSalones = {
     'CB': ['CB1', 'CB2', 'CB3', 'CB4'],
@@ -32,18 +28,23 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
     'LC': ['TDM', 'ACISCO', 'LCSG', 'LCSO'],
     'UD': ['UD1', 'UD2', 'UD11', 'UD12'],
   };
-
-  String? selectedTime;
-  List<String> times = generateTimes();
-
-  String? selectedEdificio;
-  String? selectedSalon;
-
-  @override
-  void dispose() {
-    _horaController.dispose();
-    super.dispose();
-  }
+  List<String> horas = [
+    '07:00',
+    '08:00',
+    '09:00',
+    '10:00',
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+    '16:00',
+    '17:00',
+    '18:00',
+    '19:00',
+    '20:00',
+    '21:00',
+  ];
 
   @override
   void initState() {
@@ -78,11 +79,10 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
         padding: const EdgeInsets.all(30),
         children: [
           DropdownButtonFormField(
-              hint: const Text("Selecciona un maestro"),
-              value: idProfesor,
-              items: profesores.map((e) {
+              hint: const Text("Selecciona un profesor"),
+              items: profesores.map((profesor) {
                 return DropdownMenuItem(
-                    value: e.nprofesor, child: Text(e.nombre));
+                    value: profesor.nprofesor, child: Text(profesor.nombre));
               }).toList(),
               onChanged: (valor) {
                 setState(() {
@@ -92,7 +92,6 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
           const SizedBox(height: 20),
           DropdownButtonFormField(
               hint: const Text("Selecciona una materia"),
-              value: idMateria,
               items: materias.map((e) {
                 return DropdownMenuItem(
                     value: e.nmat, child: Text(e.descripcion));
@@ -104,17 +103,16 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
               }),
           const SizedBox(height: 20),
           DropdownButtonFormField<String>(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Selecciona una hora',
               border: OutlineInputBorder(),
             ),
-            value: selectedTime,
             onChanged: (newValue) {
               setState(() {
                 selectedTime = newValue;
               });
             },
-            items: times.map<DropdownMenuItem<String>>((String value) {
+            items: horas.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Text(value),
@@ -127,10 +125,9 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
             hint: const Text("Selecciona un edificio"),
             onChanged: (newValue) {
               setState(() {
-                print(newValue);
                 selectedEdificio = newValue;
                 selectedSalon =
-                    null; // Resetea el salón cuando cambia el edificio
+                null; // Resetea el salón cuando cambia el edificio
               });
             },
             items: edificiosYSalones.keys
@@ -170,12 +167,52 @@ class _RegistrarHorariosState extends State<RegistrarHorarios> {
           TextButton(
             child: const Text('Agregar'),
             onPressed: () {
-
+              if (idProfesor == null) {
+                mensaje('SELECCIONA UN PROFESOR', Colors.red);
+                return;
+              }
+              if (idMateria == null) {
+                mensaje('SELECCIONA UNA MATERIA', Colors.red);
+                return;
+              }
+              if (selectedTime == null) {
+                mensaje('SELECCIONA UNA HORA', Colors.red);
+                return;
+              }
+              if (selectedEdificio == null) {
+                mensaje('SELECCIONA UN EDIFICIO', Colors.red);
+                return;
+              }
+              if (selectedSalon == null) {
+                mensaje('SELECCIONA UN SALON', Colors.red);
+                return;
+              }
+              Horario horario = Horario(
+                  nhorario: 0,
+                  nprofesor: idProfesor.toString(),
+                  nmat: idMateria.toString(),
+                  hora: selectedTime.toString(),
+                  edificio: selectedEdificio.toString(),
+                  salon: selectedSalon.toString());
+              DBHorario.insertar(horario).then((value){
+                if(value == 0){
+                  mensaje('ERROR DE INSERSION', Colors.red);
+                  return;
+                }
+                mensaje('HORARIO AGREGADO', Colors.green);
+              });
               Navigator.of(context).pop();
             },
           ),
         ],
       ),
+    );
+  }
+
+  void mensaje(String s, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(s), backgroundColor: color,
+        )
     );
   }
 }
