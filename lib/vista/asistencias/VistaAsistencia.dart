@@ -1,7 +1,4 @@
 import 'package:dam_u3_practica1_checador/controlador/DBAsistencia.dart';
-import 'package:dam_u3_practica1_checador/controlador/DBHorario.dart';
-import 'package:dam_u3_practica1_checador/modelo/asistencia.dart';
-import 'package:dam_u3_practica1_checador/modelo/horarioProfesorMateria.dart';
 import 'package:dam_u3_practica1_checador/modelo/todo.dart';
 import 'package:dam_u3_practica1_checador/vista/asistencias/editarAsistencia.dart';
 import 'package:flutter/material.dart';
@@ -33,10 +30,12 @@ class _VistaAsistenciaState extends State<VistaAsistencia> {
 
   @override
   Widget build(BuildContext context) {
-    cargarDatos();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Gestión de Asistencia',style: TextStyle(color: Colors.white),),
+        title: const Text(
+          'Gestión de Asistencia',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.indigo.shade900,
       ),
       body: ListView.builder(
@@ -49,7 +48,9 @@ class _VistaAsistenciaState extends State<VistaAsistencia> {
               leading: CircleAvatar(
                 backgroundColor: Colors.deepOrange,
                 child: Text(
-                  "${asistencias[index].idasistencia}",style: TextStyle(color: Colors.white),),
+                  "${asistencias[index].idasistencia}",
+                  style: const TextStyle(color: Colors.white),
+                ),
               ),
               title: Text(asistencias[index].nombreProfesor),
               subtitle: Text(
@@ -60,7 +61,12 @@ class _VistaAsistenciaState extends State<VistaAsistencia> {
                   IconButton(
                     icon: const Icon(Icons.edit, color: Colors.deepOrange),
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) =>  EditarAsistencia(nhorario: asistencias[index].nhorario)));
+                      Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditarAsistencia(
+                                      nhorario: asistencias[index].nhorario)))
+                          .then((value) => cargarDatos());
                     },
                   ),
                   IconButton(
@@ -79,17 +85,18 @@ class _VistaAsistenciaState extends State<VistaAsistencia> {
                                 onPressed: () => Navigator.of(context).pop(),
                               ),
                               TextButton(
-                                child: const Text('Eliminar'),
                                 style: TextButton.styleFrom(
                                   foregroundColor: Colors.white,
                                   backgroundColor: Colors.red,
                                 ),
-                                  onPressed: () {
-                                    DBAsistencia.eliminar(asistencias[index].idasistencia);
-                                    setState(() {
-                                      cargarDatos();
-                                    });
-                                  },
+                                onPressed: () {
+                                  DBAsistencia.eliminar(
+                                      asistencias[index].idasistencia);
+                                  setState(() {
+                                    cargarDatos();
+                                  });
+                                },
+                                child: const Text('Eliminar'),
                               ),
                             ],
                           );
