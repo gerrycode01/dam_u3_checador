@@ -24,8 +24,15 @@ class _Query1State extends State<Query1> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(10),
-      child: (Column(
+      child: (
+          Column(
         children: [
+          Text("CLASES DE PROFESORES ", style: TextStyle(
+            color: Colors.deepOrange,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),),
+          SizedBox(height: 20,),
           Row(
             children: [
               Expanded(
@@ -97,14 +104,28 @@ class _Query1State extends State<Query1> {
             },
             child: const Text('Buscar'),
           ),
+          SizedBox(height: 20,),
           Expanded(
-              child: ListView.builder(
-                  itemCount: profesores.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(profesores[index].nombre),
-                    );
-                  }))
+            child: ListView.builder(
+              itemCount: profesores.length,
+              itemBuilder: (context, index) {
+                return Card(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      ListTile(
+                        leading: Icon(Icons.person, color: Colors.indigo),
+                        title: Text(
+                          profesores[index].nombre,
+                          style: TextStyle(color: Colors.deepOrange),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          )
         ],
       )),
     );

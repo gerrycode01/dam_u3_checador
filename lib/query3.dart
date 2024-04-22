@@ -40,6 +40,12 @@ class _Query3State extends State<Query3> {
       padding: const EdgeInsets.all(10),
       child: Column(
         children: [
+          Text("MATERIAS DE PROFESORES", style: TextStyle(
+            color: Colors.deepOrange,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),),
+          SizedBox(height: 20,),
           Row(
             children: [
               Expanded(
@@ -93,14 +99,25 @@ class _Query3State extends State<Query3> {
               )
             ],
           ),
+          SizedBox(height: 20,),
           Expanded(
               child: ListView.builder(
                   itemCount: materias.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      title: Text(materias[index].descripcion),
+                    return Card(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          ListTile(
+                            leading: Icon(Icons.person, color: Colors.indigo,),
+                            title: Text(materias[index].descripcion,style: TextStyle(color: Colors.deepOrange),),
+                          )
+                        ],
+                      ),
                     );
-                  }))
+                  }
+              )
+          )
         ],
       ),
     );
