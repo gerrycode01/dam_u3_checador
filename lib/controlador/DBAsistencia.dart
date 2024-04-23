@@ -28,7 +28,7 @@ class DBAsistencia {
         idasistencia: asistencia[0]['IDASISTENCIA'],
         nhorario: asistencia[0]['NHORARIO'],
         fecha: asistencia[0]['FECHA'],
-        asistencia: asistencia[0]['ASISTENCIA']);
+        asistencia: asistencia[0]['ASISTENCIA'] == 1);
   }
 
   static Future<List<Asistencia>> mostrarPorHorario(int nhorario) async {
@@ -41,7 +41,7 @@ class DBAsistencia {
             idasistencia: asistencias[index]['IDASISTENCIA'],
             nhorario: asistencias[index]['NHORARIO'],
             fecha: asistencias[index]['FECHA'],
-            asistencia: asistencias[index]['ASISTENCIA']));
+            asistencia: asistencias[index]['ASISTENCIA'] == 1));
   }
 
   static Future<int> actualizar(Asistencia asistencia) async {
