@@ -1,5 +1,4 @@
 import 'package:dam_u3_practica1_checador/query1.dart';
-import 'package:dam_u3_practica1_checador/controlador/DB.dart';
 import 'package:dam_u3_practica1_checador/controlador/DBProfesor.dart';
 import 'package:dam_u3_practica1_checador/modelo/profesor.dart';
 import 'package:dam_u3_practica1_checador/query2.dart';
@@ -43,7 +42,6 @@ class _MyHomePageState extends State<MyHomePage> {
   String? selectedTime;
   String? selectedEdificio;
   String? selectedSalon;
-  final _fechaController = TextEditingController();
 
   // This function will be used to change the current index
   void _onItemTapped(int index) {
@@ -192,9 +190,9 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _dynamicContent() {
     switch (_currentIndex) {
       case 1:
-        return Query2();
+        return const Query2();
       case 2:
-        return Query3();
+        return const Query3();
       default:
         return const Query1();
     }
